@@ -5,43 +5,55 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <style>
-      /* Make the whole page look clean */
       body { 
         margin: 0; 
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
         background-color: #f0f0f0;
       }
       
-      /* The 3D Viewer fills the screen */
       model-viewer { width: 100vw; height: 100vh; }
       
-      /* --- NEW: "Frosted Glass" Text Styling --- */
+      /* --- Text Box Styling --- */
       #text-overlay {
         position: absolute;
         top: 24px;
         left: 24px;
         z-index: 10;
-        
-        /* This creates the blur effect */
         background: rgba(255, 255, 255, 0.65);
         backdrop-filter: blur(12px); 
-        -webkit-backdrop-filter: blur(12px); /* Safari support */
-        
-        /* Nice borders and shadows */
+        -webkit-backdrop-filter: blur(12px);
         padding: 20px;
         border-radius: 16px;
         border: 1px solid rgba(255, 255, 255, 0.3);
         box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.1);
-        
         max-width: 320px;
       }
       
       h1 { margin: 0 0 8px 0; font-size: 1.4em; color: #1a1a1a; letter-spacing: -0.5px; }
       p { margin: 0; font-size: 0.95em; line-height: 1.5; color: #4a4a4a; }
+
+      /* --- NEW: Custom AR Button Styling --- */
+      #ar-button {
+        position: absolute;
+        bottom: 50px;            /* Moved 50px up from the bottom */
+        right: 50%;              /* Center it horizontally */
+        transform: translateX(50%); /* Center alignment fix */
+        z-index: 10;
+        
+        /* Make it look like a button */
+        background-color: white;
+        border-radius: 50px;     /* Rounded pill shape */
+        border: none;
+        padding: 12px 24px;      /* Bigger size */
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        color: #333;
+      }
       
-      /* Optional: Hide text on very small phones so it doesn't block the view */
-      @media (max-width: 400px) {
-        #text-overlay { bottom: 20px; top: auto; left: 20px; right: 20px; max-width: none; }
+      /* Only show the button when AR is available (on mobile) */
+      model-viewer:not([ar-status="session-started"]) > #ar-button {
+         display: block; 
       }
       /* ------------------------- */
     </style>
@@ -50,7 +62,7 @@
 
     <div id="text-overlay">
         <h1>Costume Boots For The Wizard In The Wiz</h1>
-        <p>View this scan in your own space by tapping the AR button in the bottom corner.</p>
+        <p>View this scan in your own space by tapping the button below.</p>
     </div>
 
     <model-viewer 
@@ -62,9 +74,12 @@
       shadow-intensity="1"
       ar 
       ar-modes="webxr scene-viewer quick-look">
+
+      <button slot="ar-button" id="ar-button">
+          View in your space 👋
+      </button>
+      
     </model-viewer>
+
 </body>
-
 </html>
-
-
