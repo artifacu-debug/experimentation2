@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
       body { 
@@ -73,6 +73,48 @@
       .ar-button:hover {
         background-color: #444;
       }
+
+      /* --- HOTSPOT STYLING --- */
+      .hotspot {
+        display: block;
+        width: 20px; height: 20px;
+        border-radius: 50%;
+        border: none;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        cursor: pointer;
+        --min-hotspot-opacity: 0;
+      }
+      
+      /* The pulsing center dot */
+      .hotspot:before {
+        content: ""; position: absolute;
+        top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 10px; height: 10px;
+        background-color: #1a1a1a; border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      /* The Label (Hidden by default) */
+      .hotspot-annotation {
+        background: #1a1a1a; color: white;
+        position: absolute; transform: translate(25px, -10px);
+        padding: 8px 12px; border-radius: 4px;
+        font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700;
+        opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        width: max-content;
+      }
+
+      /* Show label on hover/click */
+      .hotspot:hover .hotspot-annotation, .hotspot:focus .hotspot-annotation {
+        opacity: 1;
+      }
+
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(26, 26, 26, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0); }
+      }
       
       /* Mobile: Move card to bottom */
       @media (max-width: 500px) {
@@ -102,11 +144,16 @@
       exposure="1.2"
       ar 
       ar-modes="webxr scene-viewer quick-look">
-      
+
+      <button class="hotspot" slot="hotspot-1" 
+              data-position="0.14648940187864767m 0.09366943374034016m 0.1811374015191225m" 
+              data-normal="0.05528056983444271m 0.6596426631045611m 0.7495436048763954m">
+          <div class="hotspot-annotation">Medium: leather, wood, paint, and metal</div>
+      </button>
+
       <button slot="ar-button" style="display: none;"></button>
       
     </model-viewer>
 
 </body>
 </html>
-
