@@ -12,7 +12,7 @@
     <style>
       body { 
         margin: 0; 
-        background-color: #e5e5e5; /* Slightly warmer grey background */
+        background-color: #e5e5e5; 
         font-family: 'Lato', sans-serif;
       }
       
@@ -25,22 +25,21 @@
         left: 30px;
         z-index: 10;
         
-        /* The "Glass" Effect */
         background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         
         padding: 30px;
-        border-radius: 2px; /* Sharper corners = more serious/museum look */
+        border-radius: 2px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        border-left: 4px solid #1a1a1a; /* A solid accent line on the left */
+        border-left: 4px solid #1a1a1a; 
         
         max-width: 300px;
       }
       
       h1 { 
         margin: 0 0 10px 0; 
-        font-family: 'Playfair Display', serif; /* The Fancy Font */
+        font-family: 'Playfair Display', serif;
         font-weight: 600;
         font-size: 1.8em; 
         color: #1a1a1a; 
@@ -55,9 +54,9 @@
         font-weight: 300;
       }
 
-      /* --- THE BUTTON (Inside the card) --- */
-  .ar-button {
-        display: inline-block; /* Ensures it is always visible */
+      /* --- THE CUSTOM BUTTON --- */
+      .ar-button {
+        display: inline-block;
         background-color: #1a1a1a; 
         color: white;
         padding: 12px 24px;
@@ -69,19 +68,18 @@
         cursor: pointer;
         transition: background 0.3s;
         width: 100%; 
-        margin-top: 15px; /* Adds space between text and button */
       }
       
       .ar-button:hover {
         background-color: #444;
       }
 
-      /* Hide button on Desktop (screens larger than 800px) since AR only works on mobile */
+      /* Desktop: Hide button */
       @media (min-width: 800px) {
         .ar-button { display: none; }
       }
       
-      /* Mobile adjustment: move card to bottom if screen is tiny */
+      /* Mobile: Move card to bottom */
       @media (max-width: 500px) {
         #info-card { top: auto; bottom: 0; left: 0; right: 0; max-width: none; border-radius: 0; border-left: none; border-top: 4px solid #1a1a1a; }
       }
@@ -91,13 +89,7 @@
 
     <div id="info-card">
         <h1>Wizard in The Wiz Boots</h1>
-        <p>Designed by: Geoffrey Holder, Trinidadian American, 1930 - 2014
-            
-
-Created by: Grace Costumes Inc., American, founded 1961
-            
-
-Worn by: Carl Hall, American, died 1999</p>
+        <p>Costume boots for the Wizard in The Wiz on Broadway, worn by Carl Hall.</p>
         
         <button class="ar-button" onclick="document.querySelector('model-viewer').activateAR()">
             View in AR Space
@@ -119,10 +111,6 @@ Worn by: Carl Hall, American, died 1999</p>
       <button slot="ar-button" style="display: none;"></button>
       
     </model-viewer>
+
 </body>
 </html>
-
-
-
-
-
