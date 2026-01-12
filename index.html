@@ -56,9 +56,9 @@
       }
 
       /* --- THE BUTTON (Inside the card) --- */
-      .ar-button {
-        display: inline-block;
-        background-color: #1a1a1a; /* Dark Black/Grey */
+  .ar-button {
+        display: inline-block; /* Ensures it is always visible */
+        background-color: #1a1a1a; 
         color: white;
         padding: 12px 24px;
         font-family: 'Lato', sans-serif;
@@ -68,7 +68,8 @@
         border: none;
         cursor: pointer;
         transition: background 0.3s;
-        width: 100%; /* Full width of the card */
+        width: 100%; 
+        margin-top: 15px; /* Adds space between text and button */
       }
       
       .ar-button:hover {
@@ -89,8 +90,12 @@
 <body>
 
     <div id="info-card">
-        <h1>Wizard's Boots</h1>
-        <p>Original costume prop from the 1978 production. Scanned in 4K resolution.</p>
+        <h1>Wizard in The Wiz Boots</h1>
+        <p>Designed by: Geoffrey Holder, Trinidadian American, 1930 - 2014
+
+Created by: Grace Costumes Inc., American, founded 1961
+
+Worn by: Carl Hall, American, died 1999</p>
         
         <button class="ar-button" onclick="document.querySelector('model-viewer').activateAR()">
             View in AR Space
@@ -100,7 +105,7 @@
     <model-viewer 
       src="boots2.glb"
       ios-src="boots.usdz"
-      alt="A 3D scan of museum boots" 
+      alt="A 3D scan of boots" 
       auto-rotate 
       camera-controls 
       shadow-intensity="1"
@@ -112,4 +117,5 @@
 
 </body>
 </html>
+
 
