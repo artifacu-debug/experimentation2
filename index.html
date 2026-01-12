@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Scan Viewer</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
+    <style>
+      /* Make the whole page look clean */
+      body { 
+        margin: 0; 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+        background-color: #f0f0f0;
+      }
+      
+      /* The 3D Viewer fills the screen */
+      model-viewer { width: 100vw; height: 100vh; }
+      
+      /* --- NEW: "Frosted Glass" Text Styling --- */
+      #text-overlay {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+        z-index: 10;
+        
+        /* This creates the blur effect */
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(12px); 
+        -webkit-backdrop-filter: blur(12px); /* Safari support */
+        
+        /* Nice borders and shadows */
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.1);
+        
+        max-width: 320px;
+      }
+      
+      h1 { margin: 0 0 8px 0; font-size: 1.4em; color: #1a1a1a; letter-spacing: -0.5px; }
+      p { margin: 0; font-size: 0.95em; line-height: 1.5; color: #4a4a4a; }
+      
+      /* Optional: Hide text on very small phones so it doesn't block the view */
+      @media (max-width: 400px) {
+        #text-overlay { bottom: 20px; top: auto; left: 20px; right: 20px; max-width: none; }
+      }
+      /* ------------------------- */
+    </style>
+</head>
+<body>
+
+    <div id="text-overlay">
+        <h1>My Room Scan</h1>
+        <p>View this scan in your own space by tapping the AR button in the bottom corner.</p>
+    </div>
+
+    <model-viewer 
+      src="scan.glb" 
+      alt="A 3D scan of a room" 
+      auto-rotate 
+      camera-controls 
+      shadow-intensity="1"
+      ar 
+      ar-modes="webxr scene-viewer quick-look">
+    </model-viewer>
+
+</body>
+</html>
