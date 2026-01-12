@@ -1,84 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Scan Viewer</title>
+    <title>Museum Collection Viewer</title>
+    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
     <style>
       body { 
         margin: 0; 
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-        background-color: #f0f0f0;
+        background-color: #e5e5e5; /* Slightly warmer grey background */
+        font-family: 'Lato', sans-serif;
       }
       
       model-viewer { width: 100vw; height: 100vh; }
       
-      /* --- Text Box Styling --- */
-      #text-overlay {
+      /* --- MUSEUM CARD STYLING --- */
+      #info-card {
         position: absolute;
-        top: 24px;
-        left: 24px;
-        z-index: 10;
-        background: rgba(255, 255, 255, 0.65);
-        backdrop-filter: blur(12px); 
-        -webkit-backdrop-filter: blur(12px);
-        padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.1);
-        max-width: 320px;
-      }
-      
-      h1 { margin: 0 0 8px 0; font-size: 1.4em; color: #1a1a1a; letter-spacing: -0.5px; }
-      p { margin: 0; font-size: 0.95em; line-height: 1.5; color: #4a4a4a; }
-
-      /* --- NEW: Custom AR Button Styling --- */
-      #ar-button {
-        position: absolute;
-        bottom: 50px;            /* Moved 50px up from the bottom */
-        right: 50%;              /* Center it horizontally */
-        transform: translateX(50%); /* Center alignment fix */
+        top: 30px;
+        left: 30px;
         z-index: 10;
         
-        /* Make it look like a button */
-        background-color: white;
-        border-radius: 50px;     /* Rounded pill shape */
-        border: none;
-        padding: 12px 24px;      /* Bigger size */
-        font-weight: bold;
-        font-size: 16px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        color: #333;
+        /* The "Glass" Effect */
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        
+        padding: 30px;
+        border-radius: 2px; /* Sharper corners = more serious/museum look */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-left: 4px solid #1a1a1a; /* A solid accent line on the left */
+        
+        max-width: 300px;
       }
       
-      /* Only show the button when AR is available (on mobile) */
-      model-viewer:not([ar-status="session-started"]) > #ar-button {
-         display: block; 
+      h1 { 
+        margin: 0 0 10px 0; 
+        font-family: 'Playfair Display', serif; /* The Fancy Font */
+        font-weight: 600;
+        font-size: 1.8em; 
+        color: #1a1a1a; 
+        line-height: 1.1;
       }
-      /* ------------------------- */
+      
+      p { 
+        margin: 0 0 20px 0; 
+        font-size: 0.95em; 
+        line-height: 1.6; 
+        color: #555; 
+        font-weight: 300;
+      }
+
+      /* --- THE BUTTON (Inside the card) --- */
+      .ar-button {
+        display: inline-block;
+        background-color: #1a1a1a; /* Dark Black/Grey */
+        color: white;
+        padding: 12px 24px;
+        font-family: 'Lato', sans-serif;
+        font-size: 0.85em;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+        width: 100%; /* Full width of the card */
+      }
+      
+      .ar-button:hover {
+        background-color: #444;
+      }
+
+      /* Hide button on Desktop (screens larger than 800px) since AR only works on mobile */
+      @media (min-width: 800px) {
+        .ar-button { display: none; }
+      }
+      
+      /* Mobile adjustment: move card to bottom if screen is tiny */
+      @media (max-width: 500px) {
+        #info-card { top: auto; bottom: 0; left: 0; right: 0; max-width: none; border-radius: 0; border-left: none; border-top: 4px solid #1a1a1a; }
+      }
     </style>
 </head>
 <body>
 
-    <div id="text-overlay">
-        <h1>Costume Boots For The Wizard In The Wiz</h1>
-        <p>View this scan in your own space by tapping the button below.</p>
+    <div id="info-card">
+        <h1>Wizard's Boots</h1>
+        <p>Original costume prop from the 1978 production. Scanned in 4K resolution.</p>
+        
+        <button class="ar-button" onclick="document.querySelector('model-viewer').activateAR()">
+            View in AR Space
+        </button>
     </div>
 
     <model-viewer 
-      src="boots2.glb"
+      src="boots.glb"
       ios-src="boots.usdz"
-      alt="A 3D scan of a pair of boots" 
+      alt="A 3D scan of museum boots" 
       auto-rotate 
       camera-controls 
       shadow-intensity="1"
+      environment-image="neutral"
+      exposure="1.2"
       ar 
       ar-modes="webxr scene-viewer quick-look">
-
-      <button slot="ar-button" id="ar-button">
-          View in your space 👋
-      </button>
-      
     </model-viewer>
 
 </body>
