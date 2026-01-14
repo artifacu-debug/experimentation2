@@ -10,18 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
-      body { 
-        margin: 0; 
-        background-color: #e5e5e5; 
-        font-family: 'Lato', sans-serif;
-      }
-      
+      body { margin: 0; background-color: #e5e5e5; font-family: 'Lato', sans-serif; }
       model-viewer { width: 100vw; height: 100vh; }
       
-      /* --- MUSEUM CARD STYLING --- */
+      /* --- SIDE CARD --- */
       #info-card {
-        position: absolute;
-        top: 30px; left: 30px; z-index: 10;
+        position: absolute; top: 30px; left: 30px; z-index: 10;
         background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         padding: 30px; border-radius: 2px; 
@@ -29,11 +23,9 @@
         border-left: 4px solid #1a1a1a; 
         max-width: 320px;
       }
-      
       h1 { margin: 0 0 10px 0; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.8em; color: #1a1a1a; line-height: 1.1; }
       p { margin: 0 0 20px 0; font-size: 0.95em; line-height: 1.6; color: #555; font-weight: 300; }
 
-      /* --- BUTTONS --- */
       .ar-button {
         display: inline-block; background-color: #1a1a1a; color: white;
         padding: 12px 24px; font-family: 'Lato', sans-serif; font-size: 0.85em;
@@ -42,7 +34,7 @@
       }
       .ar-button:hover { background-color: #444; }
 
-      /* --- HOTSPOT STYLING --- */
+      /* --- HOTSPOTS --- */
       .hotspot {
         display: block; width: 20px; height: 20px; border-radius: 50%; border: none;
         background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); cursor: pointer;
@@ -53,8 +45,6 @@
         width: 10px; height: 10px; background-color: #1a1a1a; border-radius: 50%;
         animation: pulse 2s infinite;
       }
-      
-      /* The Short Label (Hover Only) */
       .hotspot-annotation {
         background: #1a1a1a; color: white; position: absolute; transform: translate(25px, -10px);
         padding: 8px 12px; border-radius: 4px; font-family: 'Lato', sans-serif; font-size: 14px; 
@@ -62,8 +52,9 @@
       }
       .hotspot:hover .hotspot-annotation { opacity: 1; }
 
-      /* --- NEW: POPUP MODAL STYLING --- */
-      #info-modal {
+      /* --- SHARED MODAL STYLING --- */
+      /* This class works for BOTH popup windows */
+      .modal-overlay {
         display: none; /* Hidden by default */
         position: fixed; z-index: 100; left: 0; top: 0;
         width: 100%; height: 100%;
@@ -79,12 +70,8 @@
         max-height: 80vh; overflow-y: auto; 
       }
       
-      .close-btn {
-        position: absolute; top: 15px; right: 20px;
-        color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer;
-      }
+      .close-btn { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
       .close-btn:hover { color: black; }
-      
       .modal-title { font-family: 'Playfair Display', serif; font-size: 2em; margin-top: 0; }
       .modal-text { font-size: 1em; line-height: 1.8; color: #444; }
 
@@ -93,7 +80,6 @@
         70% { box-shadow: 0 0 0 10px rgba(26, 26, 26, 0); }
         100% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0); }
       }
-      
       @media (max-width: 500px) {
         #info-card { top: auto; bottom: 0; left: 0; right: 0; max-width: none; border-radius: 0; border-left: none; border-top: 4px solid #1a1a1a; }
       }
@@ -105,8 +91,8 @@
         <h1>Wrestler, 1929</h1>
         <p>
             Dudley Vaill Talcott (American, 1899-1986)<br>
-            Cast aluminum, 80 x 47 ½ x 30-3/4" (203.2 x 120.7 x 78.1 cm)<br>
-            The Wolfsonian–Florida International University, Miami Beach, Florida, TD1991.36<br>
+            Cast aluminum, 80 x 47 ½ x 30-3/4"<br>
+            The Wolfsonian–FIU<br>
             Purchased in 1991
         </p>
         <button class="ar-button" onclick="document.querySelector('model-viewer').activateAR()">
@@ -118,29 +104,31 @@
       src="Wolfsonian_wrestler_model.glb"
       ios-src="Wolfsonian_wrestler_model2.usdz"
       alt="A 3D scan of Wrestler sculpture" 
-      auto-rotate 
-      camera-controls 
-      shadow-intensity="1"
-      environment-image="neutral"
-      exposure="1.2"
-      ar 
-      ar-modes="webxr scene-viewer quick-look">
+      auto-rotate camera-controls shadow-intensity="1"
+      environment-image="neutral" exposure="1.2"
+      ar ar-modes="webxr scene-viewer quick-look">
 
       <button class="hotspot" slot="hotspot-1" 
-              onclick="openModal()"
+              onclick="openModal('modal-history')"
               data-position="-8.15963882474091m 8.636328286922975m 2.2067943717931406m" 
               data-normal="0.048433321468170365m 0.998289219323802m -0.03275435777778366m">
-          <div class="hotspot-annotation">Read History</div>
+          <div class="hotspot-annotation">Exhibition History</div>
+      </button>
+
+      <button class="hotspot" slot="hotspot-2" 
+              onclick="openModal('modal-style')"
+              data-position="-3.6172853345738076m 152.08977101715274m 24.483369686137593m" 
+              data-normal="-0.5215666422549486m 0.7659499093079097m 0.3758842562785829m">
+          <div class="hotspot-annotation">Artistic Style</div>
       </button>
 
       <button slot="ar-button" style="display: none;"></button>
-      
     </model-viewer>
 
-    <div id="info-modal" onclick="closeModal()">
+
+    <div id="modal-history" class="modal-overlay" onclick="closeAllModals()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
             <h2 class="modal-title">Exhibition History</h2>
             <p class="modal-text">
                 The Wrestler was exhibited in 1930 at The Museum of Modern Art and then at the 10th Olympic Games in Los Angeles in 1932. 
@@ -149,20 +137,37 @@
                 <br><br>
                 Talcott received an Honorable Mention. The gold medal went to Mahonri Young, an important New York social realist sculptor (and grandson of Brigham Young).
             </p>
-            
         </div>
     </div>
 
+    <div id="modal-style" class="modal-overlay" onclick="closeAllModals()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h2 class="modal-title">Artistic Style</h2>
+            <p class="modal-text">
+                The artist Dudley Talcott appropriated a recognizable semi-classical form and superimposed a machine-like veneer, with hands resembling tools, exaggerated and stylized musculature, and a featureless visage.
+                <br><br>
+                Fabricating the massive form in cast aluminum, a newly accessible and favored Art Deco building material at the time, he further associated the Wrestler with a new modern aspect.
+            </p>
+        </div>
+    </div>
+
+
     <script>
-        function openModal() {
-            document.getElementById("info-modal").style.display = "flex";
+        // Open a specific modal based on ID
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = "flex";
         }
 
-        function closeModal() {
-            document.getElementById("info-modal").style.display = "none";
+        // Close all modals
+        function closeAllModals() {
+            const modals = document.querySelectorAll('.modal-overlay');
+            modals.forEach(modal => {
+                modal.style.display = "none";
+            });
         }
     </script>
 
 </body>
 </html>
-
