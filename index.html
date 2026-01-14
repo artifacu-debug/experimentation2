@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Collection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+      body { 
+        margin: 0; padding: 0;
+        background-color: #f4f4f4; 
+        font-family: 'Lato', sans-serif;
+        color: #1a1a1a;
+      }
+
+      /* --- HERO SECTION (The Big Title) --- */
+      header {
+        text-align: center;
+        padding: 80px 20px;
+        background-color: #ffffff;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3em; margin: 0;
+        letter-spacing: -1px;
+      }
+      
+      .subtitle {
+        margin-top: 10px; font-size: 1.1em; color: #666; font-weight: 300;
+        text-transform: uppercase; letter-spacing: 2px;
+      }
+
+      /* --- THE GRID (The Gallery) --- */
+      .gallery-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Auto-stacking cards */
+        gap: 30px;
+      }
+
+      /* --- THE CARDS --- */
+      .card {
+        background: white;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none; /* Removes underline from links */
+        color: inherit;
+        display: block;
+      }
+      
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      }
+
+      /* Thumbnail Image Placeholder */
+      .card-image {
+        width: 100%;
+        height: 250px;
+        background-color: #eee;
+        object-fit: cover;
+      }
+
+      .card-info { padding: 25px; }
+      
+      .card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4em; margin: 0 0 5px 0;
+      }
+      
+      .card-desc {
+        font-size: 0.9em; color: #777; line-height: 1.5;
+      }
+      
+      .view-btn {
+        margin-top: 15px;
+        font-size: 0.8em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+        color: #1a1a1a;
+        display: inline-block;
+        border-bottom: 2px solid #ddd;
+      }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>The Digital Archive</h1>
+        <div class="subtitle">Broadway Costume Collection</div>
+    </header>
+
+    <div class="gallery-container">
+
+        <a href="boots/index.html" class="card">
+            
+            <img src="https://via.placeholder.com/400x300?text=Boots+Preview" class="card-image" alt="Boots">
+            
+            <div class="card-info">
+                <h2 class="card-title">Wizard's Boots</h2>
+                <p class="card-desc">Silver leather platform boots worn by Carl Hall in the 1978 production.</p>
+                <span class="view-btn">View Object &rarr;</span>
+            </div>
+        </a>
+
+        <div class="card" style="opacity: 0.5; pointer-events: none;">
+            <div class="card-image" style="display: flex; align-items: center; justify-content: center; color: #999;">Coming Soon</div>
+            <div class="card-info">
+                <h2 class="card-title">Dorothy's Dress</h2>
+                <p class="card-desc">Upcoming scan from the textile department.</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

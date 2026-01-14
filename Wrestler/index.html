@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Museum Collection Viewer</title>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+      body { 
+        margin: 0; 
+        background-color: #e5e5e5; 
+        font-family: 'Lato', sans-serif;
+      }
+      
+      model-viewer { width: 100vw; height: 100vh; }
+      
+      /* --- MUSEUM CARD STYLING --- */
+      #info-card {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        z-index: 10;
+        
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        
+        padding: 30px;
+        border-radius: 2px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-left: 4px solid #1a1a1a; 
+        
+        max-width: 300px;
+      }
+      
+      h1 { 
+        margin: 0 0 10px 0; 
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+        font-size: 1.8em; 
+        color: #1a1a1a; 
+        line-height: 1.1;
+      }
+      
+      p { 
+        margin: 0 0 20px 0; 
+        font-size: 0.95em; 
+        line-height: 1.6; 
+        color: #555; 
+        font-weight: 300;
+      }
+
+      /* --- THE CUSTOM BUTTON --- */
+      .ar-button {
+        display: inline-block;
+        background-color: #1a1a1a; 
+        color: white;
+        padding: 12px 24px;
+        font-family: 'Lato', sans-serif;
+        font-size: 0.85em;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+        width: 100%; 
+      }
+      
+      .ar-button:hover {
+        background-color: #444;
+      }
+
+      /* --- HOTSPOT STYLING --- */
+      .hotspot {
+        display: block;
+        width: 20px; height: 20px;
+        border-radius: 50%;
+        border: none;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        cursor: pointer;
+        --min-hotspot-opacity: 0;
+      }
+      
+      /* The pulsing center dot */
+      .hotspot:before {
+        content: ""; position: absolute;
+        top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 10px; height: 10px;
+        background-color: #1a1a1a; border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      /* The Label (Hidden by default) */
+      .hotspot-annotation {
+        background: #1a1a1a; color: white;
+        position: absolute; transform: translate(25px, -10px);
+        padding: 8px 12px; border-radius: 4px;
+        font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700;
+        opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        width: max-content;
+      }
+
+      /* Show label on hover/click */
+      .hotspot:hover .hotspot-annotation, .hotspot:focus .hotspot-annotation {
+        opacity: 1;
+      }
+
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(26, 26, 26, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0); }
+      }
+      
+      /* Mobile: Move card to bottom */
+      @media (max-width: 500px) {
+        #info-card { top: auto; bottom: 0; left: 0; right: 0; max-width: none; border-radius: 0; border-left: none; border-top: 4px solid #1a1a1a; }
+      }
+    </style>
+</head>
+<body>
+
+    <div id="info-card">
+        <h1>Wizard in The Wiz Boots</h1>
+        <p>Costume boots for the Wizard in The Wiz on Broadway, worn by Carl Hall.</p>
+        
+        <button class="ar-button" onclick="document.querySelector('model-viewer').activateAR()">
+            View in AR Space
+        </button>
+    </div>
+
+    <model-viewer 
+      src="Wolfsonian_wrestler_model.glb"
+      ios-src="Wolfsonian_wrestler_model2.usdz"
+      alt="A 3D scan of museum boots" 
+      auto-rotate 
+      camera-controls 
+      shadow-intensity="1"
+      environment-image="neutral"
+      exposure="1.2"
+      ar 
+      ar-modes="webxr scene-viewer quick-look">
+
+      <button class="hotspot" slot="hotspot-1" 
+              data-position="0.14648940187864767m 0.09366943374034016m 0.1811374015191225m" 
+              data-normal="0.05528056983444271m 0.6596426631045611m 0.7495436048763954m">
+          <div class="hotspot-annotation">Medium: leather, wood, paint, and metal</div>
+      </button>
+
+      <button slot="ar-button" style="display: none;"></button>
+      
+    </model-viewer>
+
+</body>
+</html>
