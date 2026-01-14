@@ -10,7 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
+      /* --- YOUR CUSTOM BACKGROUND --- */
       body { margin: 0; background-color: #5a5d59; font-family: 'Lato', sans-serif; }
+      
       model-viewer { width: 100vw; height: 100vh; }
       
       /* --- SIDE CARD --- */
@@ -26,60 +28,49 @@
       h1 { margin: 0 0 10px 0; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.8em; color: #1a1a1a; line-height: 1.1; }
       p { margin: 0 0 20px 0; font-size: 0.95em; line-height: 1.6; color: #555; font-weight: 300; }
 
-      .ar-button {
-        display: inline-block; background-color: #1a1a1a; color: white;
-        padding: 12px 24px; font-family: 'Lato', sans-serif; font-size: 0.85em;
-        letter-spacing: 1px; text-transform: uppercase; border: none; cursor: pointer;
-        width: 100%; transition: background 0.3s;
+      /* --- NEW BUTTON STYLES --- */
+      .btn {
+        display: block; width: 100%;
+        padding: 12px 0; 
+        font-family: 'Lato', sans-serif; font-size: 0.85em; font-weight: 700;
+        letter-spacing: 1px; text-transform: uppercase; 
+        border: none; cursor: pointer; transition: all 0.2s;
+        margin-bottom: 10px; /* Space between buttons */
       }
-      .ar-button:hover { background-color: #444; }
 
-      /* --- HOTSPOTS --- */
-      .hotspot {
-        display: block; width: 20px; height: 20px; border-radius: 50%; border: none;
-        background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); cursor: pointer;
-        --min-hotspot-opacity: 0;
-      }
-      .hotspot:before {
-        content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        width: 10px; height: 10px; background-color: #1a1a1a; border-radius: 50%;
-        animation: pulse 2s infinite;
-      }
-      .hotspot-annotation {
-        background: #1a1a1a; color: white; position: absolute; transform: translate(25px, -10px);
-        padding: 8px 12px; border-radius: 4px; font-family: 'Lato', sans-serif; font-size: 14px; 
-        font-weight: 700; opacity: 0; pointer-events: none; transition: opacity 0.3s; width: max-content;
-      }
-      .hotspot:hover .hotspot-annotation { opacity: 1; }
+      /* Primary Button (Black) */
+      .btn-primary { background-color: #1a1a1a; color: white; }
+      .btn-primary:hover { background-color: #444; }
 
-      /* --- SHARED MODAL STYLING --- */
-      /* This class works for BOTH popup windows */
+      /* Secondary Button (Outline/White) */
+      .btn-secondary { background-color: transparent; color: #1a1a1a; border: 2px solid #1a1a1a; }
+      .btn-secondary:hover { background-color: #1a1a1a; color: white; }
+
+
+      /* --- MODAL STYLING --- */
       .modal-overlay {
         display: none; /* Hidden by default */
         position: fixed; z-index: 100; left: 0; top: 0;
         width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.6); 
+        background-color: rgba(0,0,0,0.8); 
         backdrop-filter: blur(5px); 
         align-items: center; justify-content: center;
       }
       
       .modal-content {
-        background: white; padding: 40px; border-radius: 4px; max-width: 500px; width: 80%;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative;
+        background: white; padding: 40px; border-radius: 4px; max-width: 600px; width: 85%;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative;
         border-top: 5px solid #1a1a1a;
-        max-height: 80vh; overflow-y: auto; 
+        max-height: 85vh; overflow-y: auto; 
       }
       
       .close-btn { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
       .close-btn:hover { color: black; }
-      .modal-title { font-family: 'Playfair Display', serif; font-size: 2em; margin-top: 0; }
+      
+      .modal-title { font-family: 'Playfair Display', serif; font-size: 2em; margin-top: 0; margin-bottom: 10px; }
+      .section-title { font-family: 'Lato', sans-serif; font-size: 1.1em; font-weight: 700; text-transform: uppercase; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
       .modal-text { font-size: 1em; line-height: 1.8; color: #444; }
 
-      @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0.4); }
-        70% { box-shadow: 0 0 0 10px rgba(26, 26, 26, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(26, 26, 26, 0); }
-      }
       @media (max-width: 500px) {
         #info-card { top: auto; bottom: 0; left: 0; right: 0; max-width: none; border-radius: 0; border-left: none; border-top: 4px solid #1a1a1a; }
       }
@@ -95,7 +86,12 @@
             The Wolfsonian–FIU<br>
             Purchased in 1991
         </p>
-        <button class="ar-button" onclick="document.querySelector('model-viewer').activateAR()">
+
+        <button class="btn btn-secondary" onclick="openModal()">
+            Curator Notes
+        </button>
+
+        <button class="btn btn-primary" onclick="document.querySelector('model-viewer').activateAR()">
             View in AR Space
         </button>
     </div>
@@ -104,32 +100,35 @@
       src="Wolfsonian_wrestler_model.glb"
       ios-src="Wolfsonian_wrestler_model2.usdz"
       alt="A 3D scan of Wrestler sculpture" 
-      auto-rotate camera-controls shadow-intensity="1"
-      environment-image="neutral" exposure="1.2"
+      auto-rotate camera-controls 
+      
+      /* --- LIGHTING UPGRADES --- */
+      shadow-intensity="2" 
+      shadow-softness="0"
+      exposure="0.7" 
+      tone-mapping="aces"
+      environment-image="legacy"
+      
       ar ar-modes="webxr scene-viewer quick-look">
-
-      <button class="hotspot" slot="hotspot-1" 
-              onclick="openModal('modal-history')"
-              data-position="3.133200459965508m 9.313598247268942m -34.09411157672172m" 
-              data-normal="-0.014873876126059416m 0.9995440019948845m -0.026278430033718086m">
-          <div class="hotspot-annotation">Exhibition History</div>
-      </button>
-
-      <button class="hotspot" slot="hotspot-2" 
-              onclick="openModal('modal-style')"
-              data-position="-2.6997421548416582m 153.59996488458114m -9.79749932548836m"
-              data-normal="-0.8738985297699757m 0.47675557920858563m -0.09489719363269442m">
-          <div class="hotspot-annotation">Artistic Style</div>
-      </button>
 
       <button slot="ar-button" style="display: none;"></button>
     </model-viewer>
 
 
-    <div id="modal-history" class="modal-overlay" onclick="closeAllModals()">
+    <div id="info-modal" class="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="closeAllModals()">&times;</span>
-            <h2 class="modal-title">Exhibition History</h2>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            
+            <h2 class="modal-title">About the Object</h2>
+
+            <div class="section-title">Artistic Style</div>
+            <p class="modal-text">
+                The artist Dudley Talcott appropriated a recognizable semi-classical form and superimposed a machine-like veneer, with hands resembling tools, exaggerated and stylized musculature, and a featureless visage.
+                <br><br>
+                Fabricating the massive form in cast aluminum, a newly accessible and favored Art Deco building material at the time, he further associated the Wrestler with a new modern aspect.
+            </p>
+
+            <div class="section-title">Exhibition History</div>
             <p class="modal-text">
                 The Wrestler was exhibited in 1930 at The Museum of Modern Art and then at the 10th Olympic Games in Los Angeles in 1932. 
                 <br><br>
@@ -140,38 +139,15 @@
         </div>
     </div>
 
-    <div id="modal-style" class="modal-overlay" onclick="closeAllModals()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="closeAllModals()">&times;</span>
-            <h2 class="modal-title">Artistic Style</h2>
-            <p class="modal-text">
-                The artist Dudley Talcott appropriated a recognizable semi-classical form and superimposed a machine-like veneer, with hands resembling tools, exaggerated and stylized musculature, and a featureless visage.
-                <br><br>
-                Fabricating the massive form in cast aluminum, a newly accessible and favored Art Deco building material at the time, he further associated the Wrestler with a new modern aspect.
-            </p>
-        </div>
-    </div>
-
-
     <script>
-        // Open a specific modal based on ID
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.style.display = "flex";
+        function openModal() {
+            document.getElementById("info-modal").style.display = "flex";
         }
 
-        // Close all modals
-        function closeAllModals() {
-            const modals = document.querySelectorAll('.modal-overlay');
-            modals.forEach(modal => {
-                modal.style.display = "none";
-            });
+        function closeModal() {
+            document.getElementById("info-modal").style.display = "none";
         }
     </script>
 
 </body>
 </html>
-
-
-
-
