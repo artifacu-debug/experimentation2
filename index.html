@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Wolfsonian 3D Model Gallery</title>
+    <title>The Wolfsonian 3D Model Gallery</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,15 +11,14 @@
     <style>
       body { 
         margin: 0; padding: 0;
-        background-color: #f9f9f9; 
+        background-color: #d9d9d9; 
         font-family: 'Lato', sans-serif;
         color: #1a1a1a;
       }
 
-      /* --- HEADER (Fixed: Less White Space) --- */
+      /* --- HEADER --- */
       header {
         text-align: center;
-        /* REDUCED PADDING: Was 80px, now 40px */
         padding: 40px 20px 30px 20px;
         background-color: #ffffff;
         border-bottom: 1px solid #ddd;
@@ -27,10 +26,11 @@
       
       h1 {
         font-family: 'Playfair Display', serif;
-        font-size: 2.5em; /* Slightly tighter font size */
+        font-size: 2.5em; 
         margin: 0;
         letter-spacing: -1px;
         color: #1a1a1a;
+        line-height: 1.2; /* Better spacing for mobile split */
       }
       
       .subtitle {
@@ -38,10 +38,13 @@
         text-transform: uppercase; letter-spacing: 2px;
       }
 
+      /* SMART LINE BREAK: Hidden on Desktop */
+      .mobile-break { display: none; }
+
       /* --- THE GRID --- */
       .gallery-container {
         max-width: 1000px;
-        margin: 40px auto; /* Reduced margin */
+        margin: 40px auto; 
         padding: 0 20px;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -51,7 +54,7 @@
       /* --- THE CARDS --- */
       .card {
         background: white;
-        border-radius: 8px; /* Softer corners */
+        border-radius: 8px; 
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         transition: transform 0.2s, box-shadow 0.2s;
@@ -69,7 +72,6 @@
       .card-image {
         width: 100%;
         height: 250px;
-        /* Soft Grey Background to make models pop */
         background-color: #f0f0f0; 
         object-fit: cover;
       }
@@ -89,14 +91,17 @@
       .view-btn {
         font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
         color: #1a1a1a;
-        border-bottom: 2px solid #1a1a1a; /* Stronger underline */
+        border-bottom: 2px solid #1a1a1a; 
         padding-bottom: 2px;
       }
 
-      /* Mobile Tweak */
+      /* --- MOBILE TWEAKS --- */
       @media (max-width: 600px) {
         h1 { font-size: 2em; }
         header { padding: 30px 20px; }
+        
+        /* ACTIVATE SPLIT: Show the line break only on mobile */
+        .mobile-break { display: block; }
       }
 
     </style>
@@ -104,7 +109,7 @@
 <body>
 
     <header>
-        <h1>Wolfsonian 3D Model Gallery</h1>
+        <h1>The Wolfsonian<br class="mobile-break"> 3D Model Gallery</h1>
         <div class="subtitle">Explore our collection of digitized artifacts</div>
     </header>
 
@@ -134,7 +139,4 @@
 
 </body>
 </html>
-
-
-
 
