@@ -11,16 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
    <style>
-      /* --- 1. THE NUCLEAR FIX: Stop iOS Rubber-Banding --- */
+      /* --- CORE BASICS --- */
       html, body { 
-        margin: 0; 
-        height: 100%; 
-        width: 100%;
+        margin: 0; height: 100%; width: 100%;
         background-color: #5a5d59; 
         font-family: 'Lato', sans-serif; 
-        overflow: hidden; /* Disable scrolling on the main page */
-        overscroll-behavior: none; /* Disable the 'bounce' effect */
-        position: fixed; /* Lock the page in place */
+        overflow: hidden; overscroll-behavior: none; position: fixed;
       }
       
       model-viewer { 
@@ -28,35 +24,49 @@
         padding-bottom: 0; box-sizing: border-box;
         transition: padding-bottom 0.3s ease; 
         outline: none;
+        --poster-color: transparent;
       }
 
-      /* --- TYPOGRAPHY --- */
-      h1 { 
-        margin: 0 0 10px 0; 
-        font-family: 'Playfair Display', serif; 
-        font-weight: 600; 
-        font-size: 1.8em; 
-        color: #1a1a1a; 
-        line-height: 1.1; 
+      /* --- NEW: CONTROL CLUSTER (Top Right) --- */
+      .controls-container {
+        position: absolute; top: 30px; right: 30px; z-index: 100;
+        display: flex;
+        flex-direction: column; /* Desktop: Stack Vertical */
+        gap: 15px; 
       }
-      p { margin: 0 0 20px 0; font-size: 0.95em; line-height: 1.6; color: #555; font-weight: 300; }
 
-      /* --- INFO CARD (PC Default) --- */
+      /* Circle Buttons */
+      .circle-btn {
+        width: 50px; height: 50px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(20px);
+        border: none; border-radius: 50%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.2s, background-color 0.2s;
+      }
+      .circle-btn:hover { transform: scale(1.1); background: white; }
+      .circle-btn:active { transform: scale(0.95); }
+      .circle-btn svg { width: 22px; height: 22px; fill: #1a1a1a; }
+
+      /* --- INFO CARD --- */
       #info-card {
         position: absolute; top: 30px; left: 30px; z-index: 10;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        padding: 30px; 
-        border-radius: 4px; 
+        padding: 30px; border-radius: 4px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         border-left: 5px solid #1a1a1a; 
         max-width: 320px;
         transition: transform 0.3s, opacity 0.3s;
       }
 
+      h1 { margin: 0 0 10px 0; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.8em; color: #1a1a1a; line-height: 1.1; }
+      p { margin: 0 0 20px 0; font-size: 0.95em; line-height: 1.6; color: #555; font-weight: 300; }
+
       .btn-container { display: block; }
 
-      /* --- BUTTONS --- */
       .btn {
         display: block; width: 100%; padding: 14px 0; 
         font-family: 'Lato', sans-serif; font-size: 0.9em; font-weight: 700;
@@ -69,24 +79,9 @@
       .btn-secondary { background-color: transparent; color: #1a1a1a; border: 2px solid #1a1a1a; }
       .btn-secondary:active { background-color: #eee; transform: scale(0.98); }
 
-      /* --- FULL SCREEN BUTTON --- */
-      #fullscreen-btn {
-        position: absolute; top: 30px; right: 30px; z-index: 10;
-        width: 50px; height: 50px;
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(20px);
-        border: none; border-radius: 50%;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        transition: transform 0.2s;
-      }
-      #fullscreen-btn svg { width: 24px; height: 24px; fill: #1a1a1a; }
-      #fullscreen-btn:active { transform: scale(0.9); }
-
-      /* --- MODAL --- */
+      /* --- MODAL (Content) --- */
       .modal-overlay {
-        display: none; position: fixed; z-index: 100; left: 0; top: 0;
+        display: none; position: fixed; z-index: 200; left: 0; top: 0;
         width: 100%; height: 100%;
         background-color: rgba(0,0,0,0.85); 
         backdrop-filter: blur(8px); 
@@ -97,24 +92,18 @@
         max-width: 600px; width: 85%;
         box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative;
         border-top: 5px solid #1a1a1a; 
-        max-height: 85vh; overflow-y: auto; /* Allow scrolling inside modal */
-        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+        max-height: 85vh; overflow-y: auto; 
       }
-      
-      .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start; 
-        margin-bottom: 10px;
-      }
+      .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
       .modal-title { font-family: 'Playfair Display', serif; font-size: 2em; margin: 0; line-height: 1.1; }
-      .close-btn { 
-        color: #aaa; font-size: 30px; font-weight: bold; cursor: pointer; 
-        line-height: 0.8; margin-left: 20px;
-      }
-      
+      .close-btn { color: #aaa; font-size: 30px; font-weight: bold; cursor: pointer; line-height: 0.8; margin-left: 20px; }
       .section-title { font-family: 'Lato', sans-serif; font-size: 1.1em; font-weight: 700; text-transform: uppercase; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
       .modal-text { font-size: 1em; line-height: 1.8; color: #444; }
+
+      /* --- QR CODE MODAL --- */
+      #qr-modal { display: none; text-align: center; }
+      .qr-image { width: 200px; height: 200px; margin: 20px auto; display: block; }
+      .qr-text { font-size: 0.9em; color: #666; margin-bottom: 20px; }
 
 
       /* =========================================
@@ -122,48 +111,36 @@
          ========================================= */
       @media (max-width: 600px) {
         
-        model-viewer { padding-bottom: 35vh; }
-        
-        .btn-container { display: flex; gap: 10px; }
-        .btn { width: 50%; margin-bottom: 0; font-size: 0.8em; padding: 12px 0; }
-
-        /* 2. LOCKED INFO CARD */
-        #info-card { 
-          /* Use FIXED instead of absolute. This nails it to the screen glass. */
-          position: fixed; 
-          bottom: 0; left: 0; right: 0; 
-          top: auto; /* Override PC style */
-          
-          max-width: none; width: auto; 
-          
-          border-radius: 20px 20px 0 0; 
-          border-left: none; border-top: none; 
-
-          /* Massive padding ensures it covers the bottom area */
-          padding: 25px 25px calc(30px + env(safe-area-inset-bottom)) 25px; 
-          
-          box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        /* 1. Control Cluster: Row Reverse (Postcard - Light - Fullscreen) */
+        .controls-container {
+            top: 20px; right: 20px;
+            flex-direction: row-reverse; /* Horizontal line */
+            gap: 12px;
         }
         
-        h1 { font-size: 1.6em; }
-        p { font-size: 0.9em; margin-bottom: 15px; }
+        .circle-btn { width: 45px; height: 45px; } /* Slightly smaller on mobile */
+
+        /* 2. Model View */
+        model-viewer { padding-bottom: 35vh; }
         
-        #fullscreen-btn { top: 20px; right: 20px; width: 60px; height: 60px; }
+        /* 3. Info Card */
+        #info-card { 
+          position: fixed; bottom: 0; left: 0; right: 0; top: auto;
+          max-width: none; width: auto; 
+          border-radius: 20px 20px 0 0; border-left: none; 
+          padding: 25px 25px calc(30px + env(safe-area-inset-bottom)) 25px; 
+          box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+        .btn-container { display: flex; gap: 10px; }
+        .btn { width: 50%; margin-bottom: 0; font-size: 0.8em; padding: 12px 0; }
         
-        /* 3. MODAL FIXES */
+        /* 4. Modal */
         .modal-content {
           width: 100%; height: 100%; max-width: none; max-height: none;
           border-radius: 0; border-top: none; 
           padding: 25px 25px 120px 25px;
         }
-
-        /* Pushes the title WAY down */
-        .modal-header {
-            margin-top: 0;
-            padding-top: calc(50px + env(safe-area-inset-top)); 
-            margin-bottom: 30px;
-        }
-
+        .modal-header { margin-top: 0; padding-top: calc(50px + env(safe-area-inset-top)); margin-bottom: 30px; }
         .modal-title { font-size: 2.2em; }
         .close-btn { color: #555; font-size: 40px; }
       }
@@ -183,22 +160,39 @@
         </p>
 
         <div class="btn-container">
-            <button class="btn btn-secondary" onclick="openModal()">
+            <button class="btn btn-secondary" onclick="openModal('info-modal')">
                 Learn More
             </button>
-            <button class="btn btn-primary" onclick="document.querySelector('model-viewer').activateAR()">
+            <button class="btn btn-primary" onclick="handleAR()">
                 View in AR
             </button>
         </div>
     </div>
 
-    <button id="fullscreen-btn" onclick="toggleFullScreen()" title="Toggle Full Screen">
-        <svg viewBox="0 0 24 24">
-            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-        </svg>
-    </button>
+    <div class="controls-container">
+        
+        <button class="circle-btn" id="fullscreen-btn" onclick="toggleFullScreen()" title="Toggle Full Screen">
+            <svg viewBox="0 0 24 24">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+            </svg>
+        </button>
+
+        <button class="circle-btn" onclick="toggleLighting()" title="Change Lighting">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 9c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+            </svg>
+        </button>
+
+        <button class="circle-btn" onclick="capturePostcard()" title="Save Postcard">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+            </svg>
+        </button>
+
+    </div>
 
     <model-viewer 
+      id="viewer"
       src="Wolfsonian_wrestler_model.glb"
       alt="A 3D scan of Wrestler sculpture" 
       auto-rotate camera-controls 
@@ -212,43 +206,46 @@
       <button slot="ar-button" style="display: none;"></button>
     </model-viewer>
 
-    <div id="info-modal" class="modal-overlay" onclick="closeModal()">
+    <div id="info-modal" class="modal-overlay" onclick="closeModal('info-modal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            
             <div class="modal-header">
                 <h2 class="modal-title">About the Object</h2>
-                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <span class="close-btn" onclick="closeModal('info-modal')">&times;</span>
             </div>
-
             <div class="section-title">Artistic Style</div>
             <p class="modal-text">
                 The artist Dudley Talcott appropriated a recognizable semi-classical form and superimposed a machine-like veneer, with hands resembling tools, exaggerated and stylized musculature, and a featureless visage.
-                <br><br>
-                Fabricating the massive form in cast aluminum, a newly accessible and favored Art Deco building material at the time, he further associated the Wrestler with a new modern aspect.
             </p>
-
             <div class="section-title">Exhibition History</div>
             <p class="modal-text">
-                The Wrestler was exhibited in 1930 at The Museum of Modern Art and then at the 10th Olympic Games in Los Angeles in 1932. 
-                <br><br>
-                Until 1948, art competitions were a part of the modern Olympic Games, wherein medals were awarded for works inspired by sport. Thirty-one nations participated in the 1932 Olympic art exhibition held at the Los Angeles Art Museum. 
-                <br><br>
-                Talcott received an Honorable Mention. The gold medal went to Mahonri Young, an important New York social realist sculptor (and grandson of Brigham Young).
+                The Wrestler was exhibited in 1930 at The Museum of Modern Art and then at the 10th Olympic Games in Los Angeles in 1932. Talcott received an Honorable Mention.
             </p>
         </div>
     </div>
 
+    <div id="qr-modal-overlay" class="modal-overlay" onclick="closeModal('qr-modal-overlay')">
+        <div class="modal-content" style="max-width: 350px; text-align: center;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="justify-content: flex-end;">
+                 <span class="close-btn" onclick="closeModal('qr-modal-overlay')">&times;</span>
+            </div>
+            <h2 style="margin-top:0;">View in your space</h2>
+            <p class="qr-text">Scan this code with your phone camera to view the Wrestler in AR.</p>
+            <img id="qr-image" class="qr-image" src="" alt="QR Code" />
+        </div>
+    </div>
+
     <script>
+        // --- 1. MODAL LOGIC ---
+        function openModal(id) {
+            document.getElementById(id).style.display = "flex";
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+        // --- 2. FULL SCREEN LOGIC ---
         const iconExpand = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
         const iconCompress = `<svg viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>`;
-
-        function openModal() {
-            document.getElementById("info-modal").style.display = "flex";
-        }
-
-        function closeModal() {
-            document.getElementById("info-modal").style.display = "none";
-        }
 
         function toggleFullScreen() {
             const card = document.getElementById("info-card");
@@ -259,7 +256,6 @@
                 document.body.classList.add("fullscreen-active");
                 card.style.display = "none";
                 btn.innerHTML = iconCompress;
-                
                 if (document.documentElement.requestFullscreen) {
                     document.documentElement.requestFullscreen().catch(() => {});
                 }
@@ -267,7 +263,6 @@
                 document.body.classList.remove("fullscreen-active");
                 card.style.display = "block";
                 btn.innerHTML = iconExpand;
-                
                 if (document.exitFullscreen) {
                     document.exitFullscreen().catch(() => {});
                 }
@@ -275,14 +270,112 @@
         }
 
         document.addEventListener("fullscreenchange", () => {
-            const card = document.getElementById("info-card");
-            const btn = document.getElementById("fullscreen-btn");
             if (!document.fullscreenElement) {
+                const card = document.getElementById("info-card");
+                const btn = document.getElementById("fullscreen-btn");
                 card.style.display = "block";
                 document.body.classList.remove("fullscreen-active");
                 btn.innerHTML = iconExpand;
             }
         });
+
+        // --- 3. SMART AR LOGIC (QR Code vs Mobile) ---
+        function handleAR() {
+            const viewer = document.querySelector('model-viewer');
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // On mobile? Launch AR directly
+                viewer.activateAR();
+            } else {
+                // On Computer? Generate QR Code
+                const currentURL = window.location.href;
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(currentURL)}`;
+                document.getElementById('qr-image').src = qrUrl;
+                openModal('qr-modal-overlay');
+            }
+        }
+
+        // --- 4. LIGHTING TOGGLE ---
+        let lightStep = 0;
+        function toggleLighting() {
+            const viewer = document.querySelector('model-viewer');
+            lightStep = (lightStep + 1) % 3;
+            
+            if (lightStep === 0) {
+                // Default
+                viewer.exposure = 0.7;
+                viewer.shadowIntensity = 2;
+            } else if (lightStep === 1) {
+                // Bright / Studio
+                viewer.exposure = 1.2;
+                viewer.shadowIntensity = 0.5;
+            } else {
+                // Dark / Dramatic
+                viewer.exposure = 0.5;
+                viewer.shadowIntensity = 4;
+            }
+        }
+
+        // --- 5. POSTCARD GENERATOR (Canvas Magic) ---
+        async function capturePostcard() {
+            const viewer = document.querySelector('model-viewer');
+            
+            // 1. Capture the 3D model as a Blob
+            const blob = await viewer.toBlob({ mimeType: 'image/jpeg', qualityArgument: 1 });
+            const url = URL.createObjectURL(blob);
+            
+            const img = new Image();
+            img.onload = () => {
+                // 2. Setup Canvas
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set resolution (High Res)
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // 3. Draw Model
+                ctx.drawImage(img, 0, 0);
+                
+                // 4. Draw Slick White Bar
+                const barHeight = canvas.height * 0.12; // 12% of image height
+                const barY = canvas.height - barHeight;
+                
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, barY, canvas.width, barHeight);
+                
+                // 5. Text Settings
+                ctx.fillStyle = "#1a1a1a";
+                // Title Font (Left)
+                const fontSize = canvas.height * 0.035;
+                ctx.font = `bold ${fontSize}px serif`;
+                ctx.textAlign = "left";
+                
+                // Draw Title, Artist, Date (Left side)
+                const padding = canvas.width * 0.05;
+                const textY = barY + (barHeight * 0.4);
+                
+                ctx.fillText("Wrestler", padding, textY);
+                
+                ctx.font = `normal ${fontSize * 0.6}px sans-serif`;
+                ctx.fillStyle = "#555";
+                ctx.fillText("Dudley Vaill Talcott, 1929", padding, textY + (fontSize * 1.2));
+                
+                // Draw Museum Logo/Name (Right side)
+                ctx.font = `bold ${fontSize * 0.7}px serif`;
+                ctx.fillStyle = "#1a1a1a";
+                ctx.textAlign = "right";
+                ctx.fillText("The Wolfsonian–FIU", canvas.width - padding, barY + (barHeight/2) + (fontSize * 0.2));
+
+                // 6. Download
+                const link = document.createElement('a');
+                link.download = 'Wolfsonian_Wrestler_Postcard.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            };
+            img.src = url;
+        }
     </script>
 
 </body>
