@@ -2,8 +2,9 @@
 <html>
 <head>
     <title>Museum Collection Viewer</title>
-    
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="theme-color" content="#ffffff">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
@@ -15,23 +16,19 @@
       /* --- GLOBAL FONTS & BASICS --- */
       body { margin: 0; background-color: #5a5d59; font-family: 'Lato', sans-serif; }
       
-      /* --- 3D VIEWER CONFIG --- */
       model-viewer { 
-        width: 100vw; 
-        height: 100vh;
-        padding-bottom: 0; /* Desktop Default */
-        box-sizing: border-box;
+        width: 100vw; height: 100vh;
+        padding-bottom: 0; box-sizing: border-box;
         transition: padding-bottom 0.3s ease; 
       }
 
       h1 { margin: 0 0 10px 0; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.8em; color: #1a1a1a; line-height: 1.1; }
       p { margin: 0 0 20px 0; font-size: 0.95em; line-height: 1.6; color: #555; font-weight: 300; }
 
-      /* --- INFO CARD --- */
+      /* --- INFO CARD (Bottom Bar) --- */
       #info-card {
         position: absolute; top: 30px; left: 30px; z-index: 10;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        background: white; 
         padding: 30px; border-radius: 4px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         border-left: 5px solid #1a1a1a; 
@@ -39,25 +36,20 @@
         transition: transform 0.3s, opacity 0.3s;
       }
 
-      /* --- BUTTON CONTAINER --- */
       .btn-container { display: block; }
 
-      /* --- BUTTONS --- */
       .btn {
-        display: block; width: 100%;
-        padding: 14px 0; 
+        display: block; width: 100%; padding: 14px 0; 
         font-family: 'Lato', sans-serif; font-size: 0.9em; font-weight: 700;
         letter-spacing: 1px; text-transform: uppercase; 
         border: none; cursor: pointer; transition: all 0.2s;
-        margin-bottom: 12px; 
-        text-align: center;
+        margin-bottom: 12px; text-align: center;
       }
       .btn-primary { background-color: #1a1a1a; color: white; }
       .btn-primary:active { background-color: #444; transform: scale(0.98); } 
       .btn-secondary { background-color: transparent; color: #1a1a1a; border: 2px solid #1a1a1a; }
       .btn-secondary:active { background-color: #eee; transform: scale(0.98); }
 
-      /* --- FULL SCREEN BUTTON --- */
       #fullscreen-btn {
         position: absolute; top: 30px; right: 30px; z-index: 10;
         width: 50px; height: 50px;
@@ -88,13 +80,24 @@
         max-height: 85vh; overflow-y: auto; 
       }
       
-      .close-btn { 
-        position: absolute; top: 15px; right: 20px; 
-        color: #aaa; font-size: 30px; font-weight: bold; cursor: pointer; 
-        padding: 10px; line-height: 1;
+      /* Flex Header for Alignment */
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start; 
+        margin-bottom: 10px;
+      }
+
+      .modal-title { 
+        font-family: 'Playfair Display', serif; font-size: 2em; 
+        margin: 0; line-height: 1.1; 
       }
       
-      .modal-title { font-family: 'Playfair Display', serif; font-size: 2em; margin-top: 0; margin-bottom: 10px; }
+      .close-btn { 
+        color: #aaa; font-size: 30px; font-weight: bold; cursor: pointer; 
+        line-height: 0.8; margin-left: 20px;
+      }
+      
       .section-title { font-family: 'Lato', sans-serif; font-size: 1.1em; font-weight: 700; text-transform: uppercase; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
       .modal-text { font-size: 1em; line-height: 1.8; color: #444; }
 
@@ -104,18 +107,11 @@
          ========================================= */
       @media (max-width: 600px) {
         
-        /* 1. VISIBILITY FIX: Lift Model Higher */
-        model-viewer {
-           /* Increased from 25vh to 35vh */
-           /* This pushes the wrestler UP so you see more of his legs above the card */
-           padding-bottom: 35vh; 
-        }
+        model-viewer { padding-bottom: 35vh; }
         
-        /* 2. SIDE-BY-SIDE BUTTONS */
         .btn-container { display: flex; gap: 10px; }
         .btn { width: 50%; margin-bottom: 0; font-size: 0.8em; padding: 12px 0; }
 
-        /* 3. CARD STYLING */
         #info-card { 
           top: auto; bottom: 0; left: 0; right: 0; 
           max-width: none; width: auto; 
@@ -130,43 +126,23 @@
         
         #fullscreen-btn { top: 20px; right: 20px; width: 60px; height: 60px; }
         
-        /* 4. MODAL FIXES */
         .modal-content {
           width: 100%; height: 100%; max-width: none; max-height: none;
-          border-radius: 0; 
-          padding: 30px 25px 80px 25px; 
-          /* Push text down so it doesn't overlap the X */
-          padding-top: 80px; 
-          border-top: none; 
+          border-radius: 0; border-top: none; 
+          padding: 25px;
         }
-        
-        /* 5. THE "X" BUTTON FIX (Clean & Lowered) */
-        .close-btn {
-          /* Push it WAY down (40px buffer) + Safe Area */
-          top: 40px; 
-          right: 25px;
-          margin-top: env(safe-area-inset-top);
-          
-          /* Clean Grey Look (No Circle) */
-          color: #555; 
-          background: transparent; 
-          box-shadow: none;
-          font-size: 36px; 
-          
-          /* Keep hit area large for touch */
-          width: 50px; height: 50px;
-          display: flex; align-items: center; justify-content: center;
+
+        .modal-header {
+            margin-top: 15px;
+            padding-top: env(safe-area-inset-top); 
+            margin-bottom: 30px;
         }
-        
-        .modal-title { margin-top: 10px; }
+
+        .modal-title { font-size: 2.2em; }
+        .close-btn { color: #555; font-size: 40px; }
       }
 
-      /* =========================================
-         FULL SCREEN MODE FIX (Removes Padding)
-         ========================================= */
-      body.fullscreen-active model-viewer {
-          padding-bottom: 0 !important;
-      }
+      body.fullscreen-active model-viewer { padding-bottom: 0 !important; }
     </style>
 </head>
 <body>
@@ -184,7 +160,6 @@
             <button class="btn btn-secondary" onclick="openModal()">
                 Learn More
             </button>
-            
             <button class="btn btn-primary" onclick="document.querySelector('model-viewer').activateAR()">
                 View in AR
             </button>
@@ -208,15 +183,16 @@
       environment-image="legacy"
       ar ar-modes="webxr scene-viewer quick-look"
       ar-scale="fixed">
-
       <button slot="ar-button" style="display: none;"></button>
     </model-viewer>
 
     <div id="info-modal" class="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
             
-            <h2 class="modal-title">About the Object</h2>
+            <div class="modal-header">
+                <h2 class="modal-title">About the Object</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
 
             <div class="section-title">Artistic Style</div>
             <p class="modal-text">
@@ -237,6 +213,9 @@
     </div>
 
     <script>
+        const iconExpand = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
+        const iconCompress = `<svg viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>`;
+
         function openModal() {
             document.getElementById("info-modal").style.display = "flex";
         }
@@ -245,14 +224,15 @@
             document.getElementById("info-modal").style.display = "none";
         }
 
-        /* --- FULL SCREEN LOGIC --- */
         function toggleFullScreen() {
             const card = document.getElementById("info-card");
+            const btn = document.getElementById("fullscreen-btn");
             const isVisible = card.style.display !== "none";
             
             if (isVisible) {
                 document.body.classList.add("fullscreen-active");
                 card.style.display = "none";
+                btn.innerHTML = iconCompress;
                 
                 if (document.documentElement.requestFullscreen) {
                     document.documentElement.requestFullscreen().catch(() => {});
@@ -260,6 +240,7 @@
             } else {
                 document.body.classList.remove("fullscreen-active");
                 card.style.display = "block";
+                btn.innerHTML = iconExpand;
                 
                 if (document.exitFullscreen) {
                     document.exitFullscreen().catch(() => {});
@@ -269,14 +250,17 @@
 
         document.addEventListener("fullscreenchange", () => {
             const card = document.getElementById("info-card");
+            const btn = document.getElementById("fullscreen-btn");
+
             if (!document.fullscreenElement) {
-                // If PC user hits Escape, reset everything
                 card.style.display = "block";
                 document.body.classList.remove("fullscreen-active");
+                btn.innerHTML = iconExpand;
             }
         });
     </script>
 
 </body>
 </html>
+
 
