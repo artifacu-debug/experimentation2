@@ -3,6 +3,8 @@
 <head>
     <title>Museum Collection Viewer</title>
     
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,26 +21,26 @@
       /* --- 1. INFO CARD (The white box) --- */
       #info-card {
         position: absolute; top: 30px; left: 30px; z-index: 10;
-        background: rgba(255, 255, 255, 0.95); /* Slightly more opaque for readability */
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         padding: 30px; border-radius: 4px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        border-left: 5px solid #1a1a1a; /* Thicker accent line */
+        border-left: 5px solid #1a1a1a; 
         max-width: 320px;
         transition: transform 0.3s, opacity 0.3s;
       }
 
-      /* --- 2. BUTTONS (Standard) --- */
+      /* --- 2. BUTTONS --- */
       .btn {
         display: block; width: 100%;
-        padding: 14px 0; /* Taller buttons for easier tapping */
+        padding: 14px 0; 
         font-family: 'Lato', sans-serif; font-size: 0.9em; font-weight: 700;
         letter-spacing: 1px; text-transform: uppercase; 
         border: none; cursor: pointer; transition: all 0.2s;
         margin-bottom: 12px; 
       }
       .btn-primary { background-color: #1a1a1a; color: white; }
-      .btn-primary:active { background-color: #444; transform: scale(0.98); } /* Click effect */
+      .btn-primary:active { background-color: #444; transform: scale(0.98); } 
       .btn-secondary { background-color: transparent; color: #1a1a1a; border: 2px solid #1a1a1a; }
       .btn-secondary:active { background-color: #eee; transform: scale(0.98); }
 
@@ -61,7 +63,7 @@
       .modal-overlay {
         display: none; position: fixed; z-index: 100; left: 0; top: 0;
         width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.85); /* Darker background for focus */
+        background-color: rgba(0,0,0,0.85); 
         backdrop-filter: blur(8px); 
         align-items: center; justify-content: center;
       }
@@ -73,12 +75,10 @@
         max-height: 85vh; overflow-y: auto; 
       }
       
-      /* The Close "X" Button */
       .close-btn { 
         position: absolute; top: 15px; right: 20px; 
         color: #aaa; font-size: 30px; font-weight: bold; cursor: pointer; 
-        padding: 10px; /* Bigger hit area */
-        line-height: 1;
+        padding: 10px; line-height: 1;
       }
       .close-btn:hover { color: black; }
       
@@ -88,47 +88,44 @@
 
 
       /* =========================================
-         MOBILE OPTIMIZATIONS (The Big Fix)
+         MOBILE OPTIMIZATIONS
          ========================================= */
       @media (max-width: 600px) {
         
         /* FIX 1: Info Card becomes a "Bottom Sheet" */
         #info-card { 
-          top: auto; bottom: 0; left: 0; right: 0; /* Pin to bottom */
-          max-width: none; width: auto; /* Full width */
-          border-radius: 20px 20px 0 0; /* Rounded top corners */
-          border-left: none; /* Remove side accent */
-          border-top: none;
-          padding: 25px 25px 40px 25px; /* Extra bottom padding for iPhone home bar */
-          transform: translateY(0); /* Ensure it sits correctly */
+          top: auto; bottom: 0; left: 0; right: 0; 
+          max-width: none; width: auto; 
+          border-radius: 20px 20px 0 0; 
+          border-left: none; border-top: none;
+          padding: 25px 25px 40px 25px; 
+          transform: translateY(0);
         }
         
-        /* Adjust text sizes for mobile card */
         h1 { font-size: 1.6em; }
         p { font-size: 0.9em; margin-bottom: 15px; }
 
         /* FIX 2: Bigger Full Screen Button */
         #fullscreen-btn { 
           top: 20px; right: 20px; 
-          width: 60px; height: 60px; /* Bigger touch target */
+          width: 60px; height: 60px; 
         }
         #fullscreen-btn svg { width: 28px; height: 28px; }
 
         /* FIX 3: Modal becomes 100% Full Screen */
         .modal-content {
-          width: 100%; height: 100%; /* Fill screen */
+          width: 100%; height: 100%; 
           max-width: none; max-height: none;
-          border-radius: 0; /* No corners */
-          padding: 30px 25px 80px 25px; /* Padding for scrolling */
-          border-top: none; /* Remove accent line on mobile */
+          border-radius: 0; 
+          padding: 30px 25px 80px 25px; 
+          border-top: none; 
         }
         
         /* FIX 4: Giant Close Button */
         .close-btn {
           top: 20px; right: 20px;
-          font-size: 40px; /* Huge X */
-          color: #1a1a1a; /* Black by default on mobile */
-          background: rgba(255,255,255,0.8); /* Slight background to ensure visibility */
+          font-size: 40px; color: #1a1a1a; 
+          background: rgba(255,255,255,0.8); 
           border-radius: 50%;
           width: 50px; height: 50px;
           display: flex; align-items: center; justify-content: center;
@@ -169,7 +166,7 @@
       alt="A 3D scan of Wrestler sculpture" 
       auto-rotate camera-controls 
       
-      /* --- LIGHTING UPGRADES --- */
+      /* --- LIGHTING --- */
       shadow-intensity="2" 
       shadow-softness="0"
       exposure="0.7" 
@@ -208,6 +205,7 @@
     </div>
 
     <script>
+        /* --- MODAL LOGIC --- */
         function openModal() {
             document.getElementById("info-modal").style.display = "flex";
         }
@@ -216,30 +214,17 @@
             document.getElementById("info-modal").style.display = "none";
         }
 
-        // NEW: Full Screen Logic
+        /* --- HYBRID FULL SCREEN LOGIC (Fixed for Mobile) --- */
         function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
-        }
-
-        // NEW: Hide Info Card when in Full Screen
-        document.addEventListener("fullscreenchange", () => {
             const card = document.getElementById("info-card");
-            if (document.fullscreenElement) {
-                card.style.display = "none";
-            } else {
-                card.style.display = "block";
-            }
-        });
-    </script>
+            
+            // Check visibility
+            const isVisible = card.style.display !== "none";
 
-</body>
-</html>
+            if (isVisible) {
+                /* ENTER IMMERSIVE MODE */
+                //
+
 
 
 
