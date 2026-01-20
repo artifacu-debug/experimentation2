@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Museum Collection Viewer</title>
-    
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
@@ -13,14 +12,7 @@
 
    <style>
       /* --- GLOBAL FONTS & BASICS --- */
-      /* NEW: Lock html/body height to prevent "grey gap" bounce */
-      html, body { 
-        margin: 0; padding: 0; 
-        width: 100%; height: 100%; 
-        background-color: #5a5d59; 
-        font-family: 'Lato', sans-serif; 
-        overflow: hidden; /* Stops the elastic scrolling */
-      }
+      body { margin: 0; background-color: #5a5d59; font-family: 'Lato', sans-serif; }
       
       model-viewer { 
         width: 100vw; height: 100vh;
@@ -120,25 +112,27 @@
       @media (max-width: 600px) {
         
         model-viewer { padding-bottom: 35vh; }
+        
         .btn-container { display: flex; gap: 10px; }
         .btn { width: 50%; margin-bottom: 0; font-size: 0.8em; padding: 12px 0; }
 
-        /* THE FIX: Use position: fixed instead of absolute */
+        /* CARD STYLING (The Gap Killer) */
         #info-card { 
-          position: fixed; /* Anchors specifically to screen glass */
+          top: auto; 
           bottom: 0; 
           left: 0; 
           right: 0; 
-          top: auto;
-          
           max-width: none; width: auto; 
+          
           border-radius: 20px 20px 0 0; 
           border-left: none; border-top: none; 
 
-          /* Safe Area Padding Logic */
-          padding: 25px 25px calc(25px + env(safe-area-inset-bottom)) 25px; 
+          /* 1. Add extra padding to clear the home bar */
+          padding: 25px 25px calc(30px + env(safe-area-inset-bottom)) 25px; 
           
-          box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+          /* 2. THE FIX: Paint the space BELOW the card white */
+          /* This 'shadow' creates a solid white block 100px downwards, covering any grey gap */
+          box-shadow: 0 100px 0 rgba(255, 255, 255, 0.95);
         }
         
         h1 { font-size: 1.6em; }
@@ -150,7 +144,8 @@
         .modal-content {
           width: 100%; height: 100%; max-width: none; max-height: none;
           border-radius: 0; border-top: none; 
-          padding: 25px;
+          /* 3. THE FIX: Massive bottom padding for the modal text */
+          padding: 25px 25px 120px 25px;
         }
 
         .modal-header {
