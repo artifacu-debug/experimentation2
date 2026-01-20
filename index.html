@@ -11,62 +11,66 @@
     <style>
       body { 
         margin: 0; padding: 0;
-        background-color: #f4f4f4; 
+        background-color: #f9f9f9; 
         font-family: 'Lato', sans-serif;
         color: #1a1a1a;
       }
 
-      /* --- HERO SECTION (The Big Title) --- */
+      /* --- HEADER (Fixed: Less White Space) --- */
       header {
         text-align: center;
-        padding: 80px 20px;
+        /* REDUCED PADDING: Was 80px, now 40px */
+        padding: 40px 20px 30px 20px;
         background-color: #ffffff;
         border-bottom: 1px solid #ddd;
       }
       
       h1 {
         font-family: 'Playfair Display', serif;
-        font-size: 3em; margin: 0;
+        font-size: 2.5em; /* Slightly tighter font size */
+        margin: 0;
         letter-spacing: -1px;
+        color: #1a1a1a;
       }
       
       .subtitle {
-        margin-top: 10px; font-size: 1.1em; color: #666; font-weight: 300;
+        margin-top: 10px; font-size: 0.9em; color: #666; font-weight: 400;
         text-transform: uppercase; letter-spacing: 2px;
       }
 
-      /* --- THE GRID (The Gallery) --- */
+      /* --- THE GRID --- */
       .gallery-container {
         max-width: 1000px;
-        margin: 50px auto;
+        margin: 40px auto; /* Reduced margin */
         padding: 0 20px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Auto-stacking cards */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 30px;
       }
 
       /* --- THE CARDS --- */
       .card {
         background: white;
-        border-radius: 4px;
+        border-radius: 8px; /* Softer corners */
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         transition: transform 0.2s, box-shadow 0.2s;
-        text-decoration: none; /* Removes underline from links */
+        text-decoration: none;
         color: inherit;
         display: block;
       }
       
       .card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
       }
 
-      /* Thumbnail Image Placeholder */
+      /* Image Styling */
       .card-image {
         width: 100%;
         height: 250px;
-        background-color: #eee;
+        /* Soft Grey Background to make models pop */
+        background-color: #f0f0f0; 
         object-fit: cover;
       }
 
@@ -74,19 +78,25 @@
       
       .card-title {
         font-family: 'Playfair Display', serif;
-        font-size: 1.4em; margin: 0 0 5px 0;
+        font-size: 1.5em; margin: 0 0 8px 0;
+        color: #1a1a1a;
       }
       
       .card-desc {
-        font-size: 0.9em; color: #777; line-height: 1.5;
+        font-size: 0.9em; color: #666; line-height: 1.5; margin-bottom: 20px;
       }
       
       .view-btn {
-        margin-top: 15px;
-        font-size: 0.8em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+        font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
         color: #1a1a1a;
-        display: inline-block;
-        border-bottom: 2px solid #ddd;
+        border-bottom: 2px solid #1a1a1a; /* Stronger underline */
+        padding-bottom: 2px;
+      }
+
+      /* Mobile Tweak */
+      @media (max-width: 600px) {
+        h1 { font-size: 2em; }
+        header { padding: 30px 20px; }
       }
 
     </style>
@@ -101,28 +111,28 @@
     <div class="gallery-container">
 
         <a href="Wrestler/index.html" class="card">
-            
             <img src="Wrestler/Wrestler_preview.jpg" class="card-image" alt="Wrestler">
             
             <div class="card-info">
-                <h2 class="card-title">Model of Wrestler</h2>
-                <p class="card-desc">Wrestler, 1929 by Dudley Vaill Talcott (American, 1899-1986)</p>
+                <h2 class="card-title">Wrestler, 1929</h2>
+                <p class="card-desc">Dudley Vaill Talcott (American, 1899-1986)<br>Cast aluminum</p>
                 <span class="view-btn">View Object &rarr;</span>
             </div>
         </a>
 
         <a href="Building Scan/index.html" class="card">
              <img src="Building Scan/Building_Model_preview.jpg" class="card-image" alt="Building">
-    <div class="card-info">
-                <h2 class="card-title">Model of Building</h2>
-                <p class="card-desc">The Wolfsonian Building Scan</p>
-                <span class="view-btn">View Object &rarr;</span>
+             
+            <div class="card-info">
+                <h2 class="card-title">The Wolfsonian Building</h2>
+                <p class="card-desc">1001 Washington Avenue<br>Miami Beach, FL</p>
+                <span class="view-btn">View Architecture &rarr;</span>
             </div>
         </a>
+        
     </div>
 
 </body>
-
 </html>
 
 
