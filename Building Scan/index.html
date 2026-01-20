@@ -145,7 +145,8 @@
         </div>
     </div>
 
-    <script>
+   <script>
+        /* --- MODAL LOGIC (Standard) --- */
         function openModal() {
             document.getElementById("info-modal").style.display = "flex";
         }
@@ -154,26 +155,50 @@
             document.getElementById("info-modal").style.display = "none";
         }
 
+        /* --- HYBRID FULL SCREEN LOGIC (Works on Mobile + PC) --- */
         function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
+            const card = document.getElementById("info-card");
+            const btn = document.getElementById("fullscreen-btn");
+            
+            // Check if the card is currently visible
+            // (If it's visible, we want to hide it => Enter "Full Screen" mode)
+            const isCurrentlyVisible = card.style.display !== "none";
+
+            if (isCurrentlyVisible) {
+                /* --- ENTER IMMERSIVE MODE --- */
+                
+                // 1. Hide the UI immediately (Works on Mobile & PC)
+                card.style.display = "none";
+
+                // 2. Try 'Real' Full Screen (Works on PC/Android, fails silently on iOS)
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        // iOS blocks this, but that's okay because we already hid the card!
+                        console.log("Full screen blocked by browser (normal on iOS)");
+                    });
+                }
+                
             } else {
+                /* --- EXIT IMMERSIVE MODE --- */
+                
+                // 1. Show the UI again
+                card.style.display = "block";
+
+                // 2. Exit 'Real' Full Screen
                 if (document.exitFullscreen) {
-                    document.exitFullscreen();
+                    document.exitFullscreen().catch(err => {}); // Ignore errors
                 }
             }
         }
 
-        // --- NEW: Watch for Full Screen Changes ---
-        // This ensures the card hides even if user presses "Escape" key
+        /* --- ESCAPE KEY LISTENER --- */
+        // This handles the case where a PC user presses "Escape" on their keyboard
+        // instead of clicking the button. We need to make sure the card comes back.
         document.addEventListener("fullscreenchange", () => {
             const card = document.getElementById("info-card");
             
-            if (document.fullscreenElement) {
-                // If Full Screen: HIDE the card
-                card.style.display = "none";
-            } else {
-                // If Normal: SHOW the card
+            // If the browser forces us out of full screen (User hit Esc), show the card
+            if (!document.fullscreenElement) {
                 card.style.display = "block";
             }
         });
@@ -184,4 +209,5 @@
 
 </body>
 </html>
+
 
