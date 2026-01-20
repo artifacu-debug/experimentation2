@@ -2,7 +2,9 @@
 <html>
 <head>
     <title>Museum Collection Viewer</title>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -110,33 +112,25 @@
          ========================================= */
       @media (max-width: 600px) {
         
-        /* 1. Lift the model */
         model-viewer { padding-bottom: 35vh; }
         
-        /* 2. Side-by-side buttons */
         .btn-container { display: flex; gap: 10px; }
         .btn { width: 50%; margin-bottom: 0; font-size: 0.8em; padding: 12px 0; }
 
-        /* 3. CARD STYLING (The Fix) */
+        /* CARD STYLING (The Fix) */
         #info-card { 
           top: auto; 
           bottom: 0; 
           left: 0; 
           right: 0; 
+          max-width: none; width: auto; 
           
-          max-width: none; 
-          width: auto; 
-          
-          /* RESTORED: The Curved Edges you liked */
+          /* Rounded Top, Square Bottom */
           border-radius: 20px 20px 0 0; 
-          
-          /* Remove borders except for shape */
-          border-left: none; 
-          border-top: none; 
+          border-left: none; border-top: none; 
 
-          /* THE GAP FIX: */
-          /* We add 'env(safe-area-inset-bottom)' to the bottom padding. */
-          /* This forces the white box to extend BEHIND the home bar. */
+          /* THE GAP FIX: Add safe-area padding to the bottom */
+          /* 25px standard padding + whatever the iPhone home bar needs */
           padding: 25px 25px calc(25px + env(safe-area-inset-bottom)) 25px; 
           
           box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
@@ -283,8 +277,7 @@
 
 </body>
 </html>
-
-</body>
 </html>
+
 
 
