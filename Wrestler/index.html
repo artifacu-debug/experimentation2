@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Museum Collection Viewer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
@@ -11,16 +11,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
    <style>
-      /* --- GLOBAL FONTS & BASICS --- */
-      body { margin: 0; background-color: #5a5d59; font-family: 'Lato', sans-serif; }
+      /* --- 1. THE NUCLEAR FIX: Stop iOS Rubber-Banding --- */
+      html, body { 
+        margin: 0; 
+        height: 100%; 
+        width: 100%;
+        background-color: #5a5d59; 
+        font-family: 'Lato', sans-serif; 
+        overflow: hidden; /* Disable scrolling on the main page */
+        overscroll-behavior: none; /* Disable the 'bounce' effect */
+        position: fixed; /* Lock the page in place */
+      }
       
       model-viewer { 
         width: 100vw; height: 100vh;
         padding-bottom: 0; box-sizing: border-box;
         transition: padding-bottom 0.3s ease; 
+        outline: none;
       }
 
-      /* --- MUSEUM TYPOGRAPHY --- */
+      /* --- TYPOGRAPHY --- */
       h1 { 
         margin: 0 0 10px 0; 
         font-family: 'Playfair Display', serif; 
@@ -87,7 +97,8 @@
         max-width: 600px; width: 85%;
         box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative;
         border-top: 5px solid #1a1a1a; 
-        max-height: 85vh; overflow-y: auto; 
+        max-height: 85vh; overflow-y: auto; /* Allow scrolling inside modal */
+        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
       }
       
       .modal-header {
@@ -116,23 +127,22 @@
         .btn-container { display: flex; gap: 10px; }
         .btn { width: 50%; margin-bottom: 0; font-size: 0.8em; padding: 12px 0; }
 
-        /* CARD STYLING (The Gap Killer) */
+        /* 2. LOCKED INFO CARD */
         #info-card { 
-          top: auto; 
-          bottom: 0; 
-          left: 0; 
-          right: 0; 
+          /* Use FIXED instead of absolute. This nails it to the screen glass. */
+          position: fixed; 
+          bottom: 0; left: 0; right: 0; 
+          top: auto; /* Override PC style */
+          
           max-width: none; width: auto; 
           
           border-radius: 20px 20px 0 0; 
           border-left: none; border-top: none; 
 
-          /* 1. Add extra padding to clear the home bar */
+          /* Massive padding ensures it covers the bottom area */
           padding: 25px 25px calc(30px + env(safe-area-inset-bottom)) 25px; 
           
-          /* 2. THE FIX: Paint the space BELOW the card white */
-          /* This 'shadow' creates a solid white block 100px downwards, covering any grey gap */
-          box-shadow: 0 100px 0 rgba(255, 255, 255, 0.95);
+          box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
         }
         
         h1 { font-size: 1.6em; }
@@ -140,17 +150,17 @@
         
         #fullscreen-btn { top: 20px; right: 20px; width: 60px; height: 60px; }
         
-        /* Modal Mobile */
+        /* 3. MODAL FIXES */
         .modal-content {
           width: 100%; height: 100%; max-width: none; max-height: none;
           border-radius: 0; border-top: none; 
-          /* 3. THE FIX: Massive bottom padding for the modal text */
           padding: 25px 25px 120px 25px;
         }
 
+        /* Pushes the title WAY down */
         .modal-header {
-            margin-top: 15px;
-            padding-top: env(safe-area-inset-top); 
+            margin-top: 0;
+            padding-top: calc(50px + env(safe-area-inset-top)); 
             margin-bottom: 30px;
         }
 
