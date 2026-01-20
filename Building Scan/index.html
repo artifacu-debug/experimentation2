@@ -24,11 +24,12 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         border-left: 4px solid #1a1a1a; 
         max-width: 320px;
+        transition: opacity 0.3s; /* Smooth fade effect */
       }
       h1 { margin: 0 0 10px 0; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.8em; color: #1a1a1a; line-height: 1.1; }
       p { margin: 0 0 20px 0; font-size: 0.95em; line-height: 1.6; color: #555; font-weight: 300; }
 
-      /* --- BUTTON STYLES --- */
+      /* --- BUTTONS --- */
       .btn {
         display: block; width: 100%;
         padding: 12px 0; 
@@ -42,7 +43,7 @@
       .btn-secondary { background-color: transparent; color: #1a1a1a; border: 2px solid #1a1a1a; }
       .btn-secondary:hover { background-color: #1a1a1a; color: white; }
 
-      /* --- NEW: FULL SCREEN BUTTON (Right Side) --- */
+      /* --- FULL SCREEN BUTTON --- */
       #fullscreen-btn {
         position: absolute; top: 30px; right: 30px; z-index: 10;
         width: 50px; height: 50px;
@@ -57,20 +58,17 @@
       #fullscreen-btn:hover { transform: scale(1.1); }
       #fullscreen-btn svg { width: 24px; height: 24px; fill: #1a1a1a; }
 
-      /* --- MODAL STYLING --- */
+      /* --- MODAL --- */
       .modal-overlay {
-        display: none; 
-        position: fixed; z-index: 100; left: 0; top: 0;
+        display: none; position: fixed; z-index: 100; left: 0; top: 0;
         width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.8); 
-        backdrop-filter: blur(5px); 
+        background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); 
         align-items: center; justify-content: center;
       }
       .modal-content {
         background: white; padding: 40px; border-radius: 4px; max-width: 600px; width: 85%;
         box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative;
-        border-top: 5px solid #1a1a1a;
-        max-height: 85vh; overflow-y: auto; 
+        border-top: 5px solid #1a1a1a; max-height: 85vh; overflow-y: auto; 
       }
       .close-btn { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
       .close-btn:hover { color: black; }
@@ -129,7 +127,6 @@
     <div id="info-modal" class="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            
             <h2 class="modal-title">About the Architecture</h2>
 
             <div class="section-title">Storehouse to Symbol</div>
@@ -157,7 +154,6 @@
             document.getElementById("info-modal").style.display = "none";
         }
 
-        // NEW: Full Screen Logic
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
@@ -167,7 +163,25 @@
                 }
             }
         }
+
+        // --- NEW: Watch for Full Screen Changes ---
+        // This ensures the card hides even if user presses "Escape" key
+        document.addEventListener("fullscreenchange", () => {
+            const card = document.getElementById("info-card");
+            
+            if (document.fullscreenElement) {
+                // If Full Screen: HIDE the card
+                card.style.display = "none";
+            } else {
+                // If Normal: SHOW the card
+                card.style.display = "block";
+            }
+        });
     </script>
 
 </body>
 </html>
+
+</body>
+</html>
+
