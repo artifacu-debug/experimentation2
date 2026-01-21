@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>INTERNAL - Building Scan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+   <style>
+      body { margin: 0; height: 100%; width: 100%; background-color: #222; font-family: 'Roboto Mono', monospace; overflow: hidden; color: #ddd; }
+      
+      .staff-header {
+          position: absolute; top: 0; left: 0; right: 0; height: 28px;
+          background: #d93025; color: white;
+          font-size: 11px; font-weight: 700;
+          display: flex; align-items: center; justify-content: center; letter-spacing: 2px;
+          z-index: 100;
+      }
+
+      .meta-data {
+          position: absolute; top: 50px; left: 20px;
+          background: rgba(0,0,0,0.5); padding: 15px; border-radius: 4px;
+          border-left: 3px solid #d93025;
+          font-size: 11px; line-height: 1.6;
+          z-index: 10; pointer-events: none;
+      }
+      .meta-label { color: #888; }
+      .meta-val { color: #fff; font-weight: bold; }
+
+      .tools-panel {
+          position: absolute; top: 50px; right: 20px;
+          width: 220px;
+          background: rgba(30, 30, 30, 0.95);
+          backdrop-filter: blur(10px);
+          border: 1px solid #444; border-radius: 6px;
+          padding: 15px;
+          z-index: 50;
+          max-height: 85vh; overflow-y: auto;
+          transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+      
+      .tool-group { margin-bottom: 20px; }
+      .tool-label { font-size: 10px; text-transform: uppercase; color: #888; margin-bottom: 8px; display: block; }
+      
+      input[type=range] { width: 100%; accent-color: #d93025; cursor: pointer; }
+      
+      .action-btn {
+          width: 100%; padding: 8px; margin-bottom: 8px;
+          background: #333; border: 1px solid #555; color: white;
+          font-family: 'Roboto Mono', monospace; font-size: 10px; cursor: pointer;
+          transition: all 0.2s;
+      }
+      .action-btn:hover { background: #444; border-color: #777; }
+      .action-btn.active { background: #d93025; border-color: #d93025; }
+
+      .swatch-grid { display: flex; gap: 5px; margin-bottom: 8px; }
+      .swatch-btn { flex: 1; padding: 8px 0; border: 1px solid #555; cursor: pointer; font-size: 10px; font-family: 'Roboto Mono', monospace; color: #aaa; }
+      .swatch-btn:hover { border-color: white; color: white; }
+
+      .exit-btn { margin-top: 10px; background: transparent; border: 1px solid #d93025; color: #d93025; }
+      .exit-btn:hover { background: #d93025; color: white; }
+
+      #mobile-menu-btn {
+          display: none;
+          position: absolute; top: 40px; right: 20px; z-index: 60;
+          background: #d93025; color: white; border: none;
+          padding: 10px 15px; border-radius: 4px;
+          font-family: 'Roboto Mono', monospace; font-weight: bold; font-size: 12px;
+          cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      }
+
+      @media (max-width: 600px) {
+          .tools-panel { display: none; top: 85px; right: 20px; width: 60%; max-width: 250px; }
+          .tools-panel.open { display: block; }
+          #mobile-menu-btn { display: block; }
+          .meta-data { top: auto; bottom: 20px; left: 20px; width: 60%; font-size: 10px; }
+      }
+
+      #login-overlay {
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background: #111; z-index: 9999;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+      }
+      .login-box { text-align: center; width: 300px; }
+      .login-input {
+          width: 100%; padding: 10px; margin: 15px 0;
+          background: #222; border: 1px solid #444; color: white;
+          font-family: 'Roboto Mono', monospace; text-align: center; letter-spacing: 2px;
+      }
+      .login-btn { width: 100%; padding: 10px; background: #fff; border: none; font-weight: bold; cursor: pointer; }
+
+      model-viewer { width: 100vw; height: 100vh; outline: none; --poster-color: transparent; }
+   </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="color:white; font-size: 14px; letter-spacing: 1px;">RESTRICTED ACCESS</h2>
+            <input type="password" id="password-input" class="login-input" placeholder="ENTER PASSCODE">
+            <button class="login-btn" onclick="checkPassword()">AUTHENTICATE</button>
+            <div id="error-msg" style="color: #d93025; font-size: 10px; margin-top: 10px; display: none;">ACCESS DENIED</div>
+        </div>
+    </div>
+
+    <div class="staff-header">INTERNAL USE ONLY - WOLFSONIAN COLLECTION DATABASE</div>
+
+    <button id="mobile-menu-btn" onclick="toggleTools()">🛠 TOOLS</button>
+
+    <div class="meta-data">
+        <span class="meta-label">ADDRESS</span><br>
+        <span class="meta-val">1001 Washington Ave</span><br><br>
+        
+        <span class="meta-label">OBJECT</span><br>
+        <span class="meta-val object-name">Wolfsonian Building</span><br><br>
+        
+        <span class="meta-label">ARCHITECTS</span><br>
+        <span class="meta-val">Robertson & Patterson</span><br><br>
+        
+        <span class="meta-label">STATUS</span><br>
+        <span class="meta-val">Active Facility</span>
+    </div>
+
+    <div class="tools-panel" id="tools-panel">
+        <div class="tool-group">
+            <span class="tool-label">INSPECTION MODES</span>
+            <button class="action-btn" id="clay-btn" onclick="toggleClayMode()">TOGGLE GEOMETRY / CLAY</button>
+            <button class="action-btn" onclick="resetView()">RESET VIEW ALIGNMENT</button>
+        </div>
+
+        <div class="tool-group">
+            <span class="tool-label">STUDIO BACKGROUND</span>
+            <div class="swatch-grid">
+                <button class="swatch-btn" style="background:#222;" onclick="setBg('#222')">DARK</button>
+                <button class="swatch-btn" style="background:#fff; color:#222;" onclick="setBg('#ffffff')">WHITE</button>
+                <button class="swatch-btn" style="background:#00ff00; color:#000;" onclick="setBg('#00ff00')">GREEN</button>
+            </div>
+        </div>
+
+        <div class="tool-group">
+            <span class="tool-label">LIGHTING DIRECTION</span>
+            <input type="range" min="0" max="360" value="0" oninput="updateLightRotation(this.value)">
+        </div>
+
+        <div class="tool-group">
+            <span class="tool-label">EXPOSURE</span>
+            <input type="range" min="0.5" max="2.5" step="0.1" value="1" oninput="updateExposure(this.value)">
+        </div>
+        
+        <div class="tool-group">
+            <span class="tool-label">SHADOW SOFTNESS</span>
+            <input type="range" min="0" max="1" step="0.1" value="0" oninput="updateShadows(this.value)">
+        </div>
+
+        <div class="tool-group">
+            <span class="tool-label">ASSETS</span>
+            <button class="action-btn" onclick="captureStaffScreenshot()">TAKE SCREENSHOT (CLEAN)</button>
+            
+            <a href="Building.glb" download style="text-decoration:none;">
+                <button class="action-btn">DOWNLOAD SOURCE (.GLB)</button>
+            </a>
+        </div>
+
+        <button class="action-btn exit-btn" onclick="window.location.href='index.html'">EXIT TO PUBLIC VIEW</button>
+    </div>
+
+    <model-viewer 
+      id="viewer"
+      onclick="closeToolsOnMobile()"
+      src="Building.glb"
+      alt="Staff View" 
+      camera-controls 
+      shadow-intensity="1" 
+      exposure="1" 
+      tone-mapping="neutral">
+    </model-viewer>
+
+    <script>
+        const viewer = document.getElementById('viewer');
+
+        if (sessionStorage.getItem('staff_auth') === 'true') {
+            document.getElementById('login-overlay').style.display = 'none';
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            if (input === 'wolfsonian') { 
+                sessionStorage.setItem('staff_auth', 'true');
+                document.getElementById('login-overlay').style.display = 'none';
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+        
+        document.getElementById('password-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') { checkPassword(); }
+        });
+
+        function toggleTools() { document.getElementById('tools-panel').classList.toggle('open'); }
+        function closeToolsOnMobile() { if (window.innerWidth <= 600) { document.getElementById('tools-panel').classList.remove('open'); } }
+        function setBg(color) { document.body.style.backgroundColor = color; }
+
+        let isClay = false;
+        let originalTexture = null;
+
+        function toggleClayMode() {
+            if (!viewer.model || !viewer.model.materials || viewer.model.materials.length === 0) return;
+            const material = viewer.model.materials[0];
+            const btn = document.getElementById('clay-btn');
+            if (!isClay) {
+                originalTexture = material.pbrMetallicRoughness.baseColorTexture.texture;
+                material.pbrMetallicRoughness.baseColorTexture.setTexture(null);
+                material.pbrMetallicRoughness.setBaseColorFactor([0.8, 0.8, 0.8, 1]);
+                btn.classList.add('active');
+                btn.innerText = "RESTORE TEXTURE";
+                isClay = true;
+            } else {
+                material.pbrMetallicRoughness.baseColorTexture.setTexture(originalTexture);
+                material.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 1]);
+                btn.classList.remove('active');
+                btn.innerText = "TOGGLE GEOMETRY / CLAY";
+                isClay = false;
+            }
+        }
+
+        function updateExposure(val) { viewer.exposure = Number(val); }
+        function updateShadows(val) { viewer.shadowSoftness = Number(val); }
+        function updateLightRotation(deg) { viewer.environmentRotation = `0deg ${deg}deg 0deg`; }
+        function resetView() { viewer.cameraOrbit = "0deg 75deg 105%"; viewer.fieldOfView = "auto"; }
+
+        // --- NEW: CLEAN SCREENSHOT FUNCTION ---
+        async function captureStaffScreenshot() {
+            const bgColor = window.getComputedStyle(document.body).backgroundColor;
+            const blob = await viewer.toBlob({
+                mimeType: 'image/png', qualityArgument: 1, idealAspect: true,
+                width: viewer.clientWidth * 2, height: viewer.clientHeight * 2
+            });
+            const blobUrl = URL.createObjectURL(blob);
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width; canvas.height = img.height;
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+                const link = document.createElement('a');
+                let objName = "Object";
+                try { objName = document.querySelector('.object-name').innerText.replace(/[^a-zA-Z0-9]/g, '_'); } catch(e) {}
+                link.download = `Wolfsonian_Staff_${objName}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                URL.revokeObjectURL(blobUrl);
+            };
+            img.src = blobUrl;
+        }
+    </script>
+</body>
+</html>
