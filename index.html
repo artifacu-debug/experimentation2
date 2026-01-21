@@ -12,82 +12,117 @@
       body { margin: 0; padding: 0; background-color: #f9f9f9; font-family: 'Lato', sans-serif; color: #1a1a1a; }
 
       /* --- HEADER --- */
-      header { text-align: center; padding: 40px 20px 30px 20px; background-color: #ffffff; border-bottom: 1px solid #ddd; }
+      header { text-align: center; padding: 50px 20px 40px 20px; background-color: #ffffff; border-bottom: 1px solid #eaeaea; }
       h1 { font-family: 'Playfair Display', serif; font-size: 2.5em; margin: 0; letter-spacing: -1px; color: #1a1a1a; line-height: 1.2; }
-      .subtitle { margin-top: 10px; font-size: 0.9em; color: #666; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; }
+      .subtitle { margin-top: 10px; font-size: 0.95em; color: #666; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
       .mobile-break { display: none; }
 
-      /* --- SEARCH BAR --- */
+      /* --- PRO SEARCH BAR --- */
       .search-container {
-          max-width: 1000px; margin: 20px auto 0; padding: 0 20px;
-          display: flex; justify-content: flex-end; /* Desktop: Align right */
-          height: 40px;
+          max-width: 600px; /* constrained width for elegance */
+          margin: -25px auto 30px; /* Negative margin pulls it up into the header/border line */
+          padding: 0 20px;
+          position: relative;
+          z-index: 10;
       }
       
-     #search-input {
-            width: 100%; /* Stretch to fill screen */
-            
-            /* SLIMMER HEIGHT FIX */
-            height: 25px; 
-            padding: 0 15px 0 40px; /* 0px top/bottom, keeps room for icon on left */
-            
-            font-size: 16px; /* Prevents zoom on iOS */
-            border-radius: 14px; /* Slightly tighter radius to match new height */
-        }
-          
-          /* Add search icon as background image */
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
-          background-repeat: no-repeat;
-          background-position: 10px center;
-          background-size: 20px;
-          padding-left: 35px; /* Make room for icon */
+      .search-wrapper {
+          position: relative;
+          width: 100%;
+          transition: transform 0.2s ease;
       }
-      #search-input:focus { border-color: #545454; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+      
+      .search-icon {
+          position: absolute;
+          left: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 18px;
+          height: 18px;
+          fill: #999;
+          transition: fill 0.3s ease;
+          pointer-events: none; /* Let clicks pass through to input */
+      }
+
+      #search-input {
+          width: 100%;
+          height: 50px; /* Taller for easier tapping */
+          padding: 0 20px 0 50px; /* Room for icon */
+          
+          font-family: 'Lato', sans-serif;
+          font-size: 16px; /* Prevents iOS zoom */
+          font-weight: 400;
+          color: #1a1a1a;
+          
+          background-color: #ffffff;
+          border: 1px solid #e0e0e0;
+          border-radius: 50px; /* Full Pill Shape */
+          
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Soft, floating shadow */
+          outline: none;
+          box-sizing: border-box;
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+          appearance: none;
+          -webkit-appearance: none;
+      }
+
+      /* Hover State */
+      #search-input:hover {
+          box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+          border-color: #ccc;
+      }
+
+      /* Active/Focus State */
+      #search-input:focus {
+          border-color: #1a1a1a; /* Dark Wolfsonian Grey */
+          box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+          transform: scale(1.01); /* Subtle grow effect */
+      }
+
+      /* Icon color change on focus */
+      #search-input:focus + .search-icon {
+          fill: #1a1a1a;
+      }
+      
+      /* Placeholder text style */
+      ::placeholder { color: #bbb; font-weight: 300; }
 
       /* --- GALLERY --- */
-      .gallery-container { max-width: 1000px; margin: 20px auto 40px; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+      .gallery-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
 
       /* --- CARDS --- */
-      .card { position: relative; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; display: block; }
-      .card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+      .card { position: relative; background: white; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.03); transition: transform 0.3s ease, box-shadow 0.3s ease; text-decoration: none; color: inherit; display: block; border: 1px solid #eee; }
+      .card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-color: transparent; }
 
-      .card-image-container { position: relative; width: 100%; height: 250px; background-color: #f0f0f0; }
+      .card-image-container { position: relative; width: 100%; height: 260px; background-color: #f4f4f4; }
       .card-image { width: 100%; height: 100%; object-fit: cover; }
 
       /* --- STAFF BUTTON --- */
       .staff-lock {
           position: absolute; top: 10px; right: 10px; z-index: 10;
           width: 32px; height: 32px;
-          background: transparent; border-radius: 4px; display: flex; align-items: center; justify-content: center;
-          opacity: 0.3; transition: opacity 0.2s, background 0.2s; cursor: pointer;
+          background: rgba(255,255,255,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+          opacity: 0; transition: all 0.2s; cursor: pointer; backdrop-filter: blur(4px);
       }
-      .staff-lock svg { width: 20px; height: 20px; fill: #555; }
-      .card:hover .staff-lock { opacity: 0.6; }
-      .staff-lock:hover { opacity: 1 !important; background: rgba(0,0,0,0.1); }
+      .staff-lock svg { width: 16px; height: 16px; fill: #1a1a1a; }
+      .card:hover .staff-lock { opacity: 1; }
+      .staff-lock:hover { transform: scale(1.1); background: white; }
 
       .card-info { padding: 25px; }
-      .card-title { font-family: 'Playfair Display', serif; font-size: 1.5em; margin: 0 0 8px 0; color: #1a1a1a; }
-      .card-desc { font-size: 0.9em; color: #666; line-height: 1.5; margin-bottom: 20px; }
-      .view-btn { font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #1a1a1a; border-bottom: 2px solid #1a1a1a; padding-bottom: 2px; }
+      .card-title { font-family: 'Playfair Display', serif; font-size: 1.4em; margin: 0 0 8px 0; color: #1a1a1a; line-height: 1.2; }
+      .card-desc { font-size: 0.9em; color: #666; line-height: 1.6; margin-bottom: 20px; font-weight: 300; }
+      .view-btn { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #1a1a1a; border-bottom: 1px solid #1a1a1a; padding-bottom: 4px; transition: opacity 0.2s; }
+      .view-btn:hover { opacity: 0.7; }
 
       /* --- MOBILE OPTIMIZATIONS --- */
       @media (max-width: 600px) {
         h1 { font-size: 2em; }
-        header { padding: 30px 20px; }
+        header { padding: 40px 20px 50px 20px; } /* More bottom padding for search bar overlap */
         .mobile-break { display: block; }
-        .staff-lock { opacity: 0.5; }
         
-        /* Mobile Search: Full Width */
-        .search-container { 
-            justify-content: center; /* Center it */
-            margin-top: 20px;
-        }
+        .search-container { margin-top: -25px; } /* Pulls search bar into the header visually */
         
-        #search-input {
-            width: 100%; /* Stretch to fill screen */
-            font-size: 16px; /* Prevents zoom on iOS */
-            padding: 10px 15px 10px 40px; /* Larger tap area */
-        }
+        .staff-lock { opacity: 1; background: rgba(255,255,255,0.9); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
       }
     </style>
 </head>
@@ -99,7 +134,12 @@
     </header>
 
     <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search collection..." onkeyup="filterGallery()">
+        <div class="search-wrapper">
+            <input type="text" id="search-input" placeholder="Search collection..." onkeyup="filterGallery()">
+            <svg class="search-icon" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+        </div>
     </div>
 
     <div class="gallery-container">
@@ -184,6 +224,3 @@
     </script>
 </body>
 </html>
-
-
-
