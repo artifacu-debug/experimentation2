@@ -157,6 +157,162 @@
             <svg class="search-icon" viewBox="0 0 24 24">
                 <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
             </svg>
+        </div><!DOCTYPE html>
+<html>
+<head>
+    <title>The Wolfsonian 3D Model Gallery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+      body { margin: 0; padding: 0; background-color: #f9f9f9; font-family: 'Lato', sans-serif; color: #1a1a1a; }
+
+      /* --- INTRO LOADER (THE SHUTTER) --- */
+      #intro-shutter {
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background-color: #1a1a1a; /* Dark Wolfsonian Grey */
+          z-index: 99999;
+          display: flex; flex-direction: column; justify-content: center; align-items: center;
+          transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+      }
+      
+      .intro-title {
+          font-family: 'Playfair Display', serif;
+          font-size: 3em; color: white; margin: 0;
+          opacity: 0; 
+          text-align: center; /* Fixes off-center text if it wraps */
+          padding: 0 20px; /* Prevents text touching screen edges */
+          transform: translateY(20px);
+          animation: textReveal 1s ease-out forwards 0.2s;
+      }
+      
+      .intro-line {
+          width: 0; height: 1px; background: white; margin-top: 20px;
+          animation: lineExpand 1s cubic-bezier(0.23, 1, 0.32, 1) forwards 0.8s;
+      }
+
+      @keyframes textReveal { to { opacity: 1; transform: translateY(0); } }
+      @keyframes lineExpand { to { width: 100px; } }
+
+      .shutter-open { transform: translateY(-100%); }
+
+      /* --- HEADER --- */
+      header { 
+          text-align: center; padding: 50px 20px 40px 20px; 
+          background-color: #ffffff; border-bottom: 1px solid #eaeaea; 
+          opacity: 0; transition: opacity 1s ease 0.5s;
+      }
+      h1 { font-family: 'Playfair Display', serif; font-size: 2.5em; margin: 0; letter-spacing: -1px; color: #1a1a1a; line-height: 1.2; }
+      .subtitle { margin-top: 10px; font-size: 0.95em; color: #666; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
+      .mobile-break { display: none; }
+
+      /* --- PRO SEARCH BAR --- */
+      .search-container {
+          max-width: 600px; margin: -25px auto 30px; padding: 0 20px;
+          position: relative; z-index: 10;
+          opacity: 0; transition: opacity 1s ease 0.7s, transform 1s ease 0.7s;
+          transform: translateY(20px);
+      }
+      
+      .search-wrapper { position: relative; width: 100%; transition: transform 0.2s ease; }
+      .search-icon {
+          position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+          width: 18px; height: 18px; fill: #999; transition: fill 0.3s ease; pointer-events: none;
+      }
+
+      #search-input {
+          width: 100%; height: 50px; padding: 0 20px 0 50px;
+          font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 400; color: #1a1a1a;
+          background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 50px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05); outline: none; box-sizing: border-box;
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+          appearance: none; -webkit-appearance: none;
+      }
+      #search-input:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-color: #ccc; }
+      #search-input:focus { border-color: #1a1a1a; box-shadow: 0 8px 25px rgba(0,0,0,0.12); transform: scale(1.01); }
+      #search-input:focus + .search-icon { fill: #1a1a1a; }
+      ::placeholder { color: #bbb; font-weight: 300; }
+
+      /* --- GALLERY --- */
+      .gallery-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+      /* --- CARDS --- */
+      .card { 
+          position: relative; background: white; border-radius: 4px; overflow: hidden; 
+          box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
+          transition: transform 0.3s ease, box-shadow 0.3s ease; 
+          text-decoration: none; color: inherit; display: block; border: 1px solid #eee;
+          
+          /* Animation Setup */
+          opacity: 0; transform: translateY(30px);
+          animation-fill-mode: forwards; 
+      }
+      
+      @keyframes cardSlideUp { to { opacity: 1; transform: translateY(0); } }
+
+      .card:hover { transform: translateY(-5px) !important; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-color: transparent; }
+
+      .card-image-container { position: relative; width: 100%; height: 260px; background-color: #f4f4f4; }
+      .card-image { width: 100%; height: 100%; object-fit: cover; }
+
+      .staff-lock {
+          position: absolute; top: 10px; right: 10px; z-index: 10;
+          width: 32px; height: 32px;
+          background: rgba(255,255,255,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+          opacity: 0; transition: all 0.2s; cursor: pointer; backdrop-filter: blur(4px);
+      }
+      .staff-lock svg { width: 16px; height: 16px; fill: #1a1a1a; }
+      .card:hover .staff-lock { opacity: 1; }
+      .staff-lock:hover { transform: scale(1.1); background: white; }
+
+      .card-info { padding: 25px; }
+      .card-title { font-family: 'Playfair Display', serif; font-size: 1.4em; margin: 0 0 8px 0; color: #1a1a1a; line-height: 1.2; }
+      .card-desc { font-size: 0.9em; color: #666; line-height: 1.6; margin-bottom: 20px; font-weight: 300; }
+      .view-btn { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #1a1a1a; border-bottom: 1px solid #1a1a1a; padding-bottom: 4px; transition: opacity 0.2s; }
+      .view-btn:hover { opacity: 0.7; }
+
+      /* Animation Trigger Class */
+      body.loaded header { opacity: 1; }
+      body.loaded .search-container { opacity: 1; transform: translateY(0); }
+      body.loaded .card { animation: cardSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+      body.loaded .card:nth-child(1) { animation-delay: 0.6s; }
+      body.loaded .card:nth-child(2) { animation-delay: 0.7s; }
+      body.loaded .card:nth-child(3) { animation-delay: 0.8s; }
+
+      /* --- MOBILE OPTIMIZATIONS --- */
+      @media (max-width: 600px) {
+        /* FIX: Smaller font for intro title on mobile to prevent shift */
+        .intro-title { font-size: 1.8em; } 
+        
+        h1 { font-size: 2em; }
+        header { padding: 40px 20px 50px 20px; }
+        .mobile-break { display: block; }
+        .search-container { margin-top: -25px; }
+        .staff-lock { opacity: 1; background: rgba(255,255,255,0.9); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+      }
+    </style>
+</head>
+<body>
+
+    <div id="intro-shutter">
+        <h1 class="intro-title">THE WOLFSONIAN</h1>
+        <div class="intro-line"></div>
+    </div>
+
+    <header>
+        <h1>The Wolfsonian<br class="mobile-break"> 3D Model Gallery</h1>
+        <div class="subtitle">Explore our collection of digitized artifacts</div>
+    </header>
+
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input type="text" id="search-input" placeholder="Search collection..." onkeyup="filterGallery()">
+            <svg class="search-icon" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
         </div>
     </div>
 
