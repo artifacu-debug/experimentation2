@@ -7,10 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 
    <style>
-      /* --- DARK UI THEME --- */
       body { margin: 0; height: 100%; width: 100%; background-color: #222; font-family: 'Roboto Mono', monospace; overflow: hidden; color: #ddd; }
       
-      /* --- RED WARNING HEADER --- */
       .staff-header {
           position: absolute; top: 0; left: 0; right: 0; height: 28px;
           background: #d93025; color: white;
@@ -19,7 +17,6 @@
           z-index: 100;
       }
 
-      /* --- METADATA OVERLAY --- */
       .meta-data {
           position: absolute; top: 50px; left: 20px;
           background: rgba(0,0,0,0.5); padding: 15px; border-radius: 4px;
@@ -30,15 +27,17 @@
       .meta-label { color: #888; }
       .meta-val { color: #fff; font-weight: bold; }
 
-      /* --- CONTROL PANEL --- */
+      /* --- TOOLS PANEL --- */
       .tools-panel {
           position: absolute; top: 50px; right: 20px;
           width: 220px;
-          background: rgba(30, 30, 30, 0.9);
+          background: rgba(30, 30, 30, 0.95);
           backdrop-filter: blur(10px);
           border: 1px solid #444; border-radius: 6px;
           padding: 15px;
           z-index: 50;
+          max-height: 85vh; overflow-y: auto;
+          transition: transform 0.3s ease, opacity 0.3s ease;
       }
       
       .tool-group { margin-bottom: 20px; }
@@ -55,10 +54,29 @@
       .action-btn:hover { background: #444; border-color: #777; }
       .action-btn.active { background: #d93025; border-color: #d93025; }
 
+      .swatch-grid { display: flex; gap: 5px; margin-bottom: 8px; }
+      .swatch-btn { flex: 1; padding: 8px 0; border: 1px solid #555; cursor: pointer; font-size: 10px; font-family: 'Roboto Mono', monospace; color: #aaa; }
+      .swatch-btn:hover { border-color: white; color: white; }
+
       .exit-btn { margin-top: 10px; background: transparent; border: 1px solid #d93025; color: #d93025; }
       .exit-btn:hover { background: #d93025; color: white; }
 
-      /* --- LOGIN --- */
+      #mobile-menu-btn {
+          display: none;
+          position: absolute; top: 40px; right: 20px; z-index: 60;
+          background: #d93025; color: white; border: none;
+          padding: 10px 15px; border-radius: 4px;
+          font-family: 'Roboto Mono', monospace; font-weight: bold; font-size: 12px;
+          cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      }
+
+      @media (max-width: 600px) {
+          .tools-panel { display: none; top: 85px; right: 20px; width: 60%; max-width: 250px; }
+          .tools-panel.open { display: block; }
+          #mobile-menu-btn { display: block; }
+          .meta-data { top: auto; bottom: 20px; left: 20px; width: 60%; font-size: 10px; }
+      }
+
       #login-overlay {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
           background: #111; z-index: 9999;
@@ -88,12 +106,14 @@
 
     <div class="staff-header">INTERNAL USE ONLY - WOLFSONIAN COLLECTION DATABASE</div>
 
+    <button id="mobile-menu-btn" onclick="toggleTools()">🛠 TOOLS</button>
+
     <div class="meta-data">
         <span class="meta-label">ACCESSION ID</span><br>
         <span class="meta-val">87.1321.6.1</span><br><br>
         
-        <span class="meta-label">LOCATION</span><br>
-        <span class="meta-val">?</span><br><br>
+        <span class="meta-label">OBJECT</span><br>
+        <span class="meta-val object-name">Haile Selassie Bust</span><br><br>
         
         <span class="meta-label">YEAR OF ACQUISITION</span><br>
         <span class="meta-val">?</span><br><br>
@@ -102,11 +122,20 @@
         <span class="meta-val">STABLE - Minor oxidation</span>
     </div>
 
-    <div class="tools-panel">
+    <div class="tools-panel" id="tools-panel">
         <div class="tool-group">
             <span class="tool-label">INSPECTION MODES</span>
             <button class="action-btn" id="clay-btn" onclick="toggleClayMode()">TOGGLE GEOMETRY / CLAY</button>
             <button class="action-btn" onclick="resetView()">RESET VIEW ALIGNMENT</button>
+        </div>
+
+        <div class="tool-group">
+            <span class="tool-label">STUDIO BACKGROUND</span>
+            <div class="swatch-grid">
+                <button class="swatch-btn" style="background:#222;" onclick="setBg('#222')">DARK</button>
+                <button class="swatch-btn" style="background:#fff; color:#222;" onclick="setBg('#ffffff')">WHITE</button>
+                <button class="swatch-btn" style="background:#00ff00; color:#000;" onclick="setBg('#00ff00')">GREEN</button>
+            </div>
         </div>
 
         <div class="tool-group">
@@ -115,7 +144,7 @@
         </div>
 
         <div class="tool-group">
-            <span class="tool-label">EXPOSURE (BRIGHTNESS)</span>
+            <span class="tool-label">EXPOSURE</span>
             <input type="range" min="0.5" max="2.5" step="0.1" value="1" oninput="updateExposure(this.value)">
         </div>
         
@@ -124,13 +153,23 @@
             <input type="range" min="0" max="1" step="0.1" value="0" oninput="updateShadows(this.value)">
         </div>
 
+        <div class="tool-group">
+            <span class="tool-label">ASSETS</span>
+            <button class="action-btn" onclick="captureStaffScreenshot()">TAKE SCREENSHOT (CLEAN)</button>
+            
+            <a href="Haile.glb" download style="text-decoration:none;">
+                <button class="action-btn">DOWNLOAD SOURCE (.GLB)</button>
+            </a>
+        </div>
+
         <button class="action-btn exit-btn" onclick="window.location.href='index.html'">EXIT TO PUBLIC VIEW</button>
     </div>
 
- <model-viewer 
+    <model-viewer 
       id="viewer"
+      onclick="closeToolsOnMobile()"
       src="Haile.glb"
-      orientation="0deg 0deg 180deg"
+      orientation="0deg 180deg 0deg"
       alt="Staff View" 
       camera-controls 
       shadow-intensity="1" 
@@ -139,10 +178,8 @@
     </model-viewer>
 
     <script>
-        // Ensure we grab the viewer after the DOM loads
         const viewer = document.getElementById('viewer');
 
-        /* --- 1. PASSWORD LOGIC --- */
         if (sessionStorage.getItem('staff_auth') === 'true') {
             document.getElementById('login-overlay').style.display = 'none';
         }
@@ -161,17 +198,17 @@
             if (e.key === 'Enter') { checkPassword(); }
         });
 
-        /* --- 2. CLAY MODE --- */
+        function toggleTools() { document.getElementById('tools-panel').classList.toggle('open'); }
+        function closeToolsOnMobile() { if (window.innerWidth <= 600) { document.getElementById('tools-panel').classList.remove('open'); } }
+        function setBg(color) { document.body.style.backgroundColor = color; }
+
         let isClay = false;
         let originalTexture = null;
 
         function toggleClayMode() {
-            // Check if materials exist before trying to access them
             if (!viewer.model || !viewer.model.materials || viewer.model.materials.length === 0) return;
-
             const material = viewer.model.materials[0];
             const btn = document.getElementById('clay-btn');
-            
             if (!isClay) {
                 originalTexture = material.pbrMetallicRoughness.baseColorTexture.texture;
                 material.pbrMetallicRoughness.baseColorTexture.setTexture(null);
@@ -188,26 +225,37 @@
             }
         }
 
-        /* --- 3. SLIDER CONTROLS (Fixed types) --- */
-        function updateExposure(val) {
-            viewer.exposure = Number(val);
-        }
+        function updateExposure(val) { viewer.exposure = Number(val); }
+        function updateShadows(val) { viewer.shadowSoftness = Number(val); }
+        function updateLightRotation(deg) { viewer.environmentRotation = `0deg ${deg}deg 0deg`; }
+        function resetView() { viewer.cameraOrbit = "0deg 75deg 105%"; viewer.fieldOfView = "auto"; }
 
-        function updateShadows(val) {
-            viewer.shadowSoftness = Number(val);
-        }
-
-        function updateLightRotation(deg) {
-            viewer.environmentRotation = `0deg ${deg}deg 0deg`;
-        }
-
-        function resetView() {
-            viewer.cameraOrbit = "0deg 75deg 105%";
-            viewer.fieldOfView = "auto";
+        // --- NEW: CLEAN SCREENSHOT FUNCTION ---
+        async function captureStaffScreenshot() {
+            const bgColor = window.getComputedStyle(document.body).backgroundColor;
+            const blob = await viewer.toBlob({
+                mimeType: 'image/png', qualityArgument: 1, idealAspect: true,
+                width: viewer.clientWidth * 2, height: viewer.clientHeight * 2
+            });
+            const blobUrl = URL.createObjectURL(blob);
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width; canvas.height = img.height;
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+                const link = document.createElement('a');
+                let objName = "Object";
+                try { objName = document.querySelector('.object-name').innerText.replace(/[^a-zA-Z0-9]/g, '_'); } catch(e) {}
+                link.download = `Wolfsonian_Staff_${objName}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                URL.revokeObjectURL(blobUrl);
+            };
+            img.src = blobUrl;
         }
     </script>
-
 </body>
 </html>
-
-
