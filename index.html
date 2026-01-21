@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>The Wolfsonian 3D Model Gallery</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,44 +10,42 @@
 
     <style>
       body { margin: 0; padding: 0; background-color: #f9f9f9; font-family: 'Lato', sans-serif; color: #1a1a1a; }
+      
+      /* Stop user from scrolling while intro plays */
+      body.no-scroll { overflow: hidden; height: 100vh; }
 
-      /* --- INTRO CURTAIN (Renamed to prevent conflicts) --- */
-      #opening-curtain {
+      /* --- INTRO LOADER (THE SHUTTER) --- */
+      #intro-shutter {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
           background-color: #1a1a1a; /* Dark Wolfsonian Grey */
           z-index: 99999;
           display: flex; flex-direction: column; justify-content: center; align-items: center;
-          /* Smooth momentum curve */
           transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
       }
       
       .intro-title {
           font-family: 'Playfair Display', serif;
-          font-size: 2.2em; /* Optimized size for mobile */
-          color: white; margin: 0;
-          text-align: center; 
-          padding: 0 20px;
+          font-size: 3em; color: white; margin: 0;
           opacity: 0; 
+          text-align: center; 
+          padding: 0 20px; 
           transform: translateY(20px);
-          animation: textIn 1s ease-out forwards 0.2s;
-          transition: opacity 0.5s ease; /* For fading out later */
+          animation: textReveal 1s ease-out forwards 0.2s;
       }
       
       .intro-line {
           width: 0; height: 1px; background: white; margin-top: 20px;
-          animation: lineIn 1s cubic-bezier(0.23, 1, 0.32, 1) forwards 0.8s;
-          transition: opacity 0.5s ease; /* For fading out later */
+          animation: lineExpand 1s cubic-bezier(0.23, 1, 0.32, 1) forwards 0.8s;
       }
 
-      @keyframes textIn { to { opacity: 1; transform: translateY(0); } }
-      @keyframes lineIn { to { width: 80px; } }
+      @keyframes textReveal { to { opacity: 1; transform: translateY(0); } }
+      @keyframes lineExpand { to { width: 100px; } }
 
-      /* States for the animation */
+      .shutter-open { transform: translateY(-100%); }
+
+      /* Animation States */
       .fade-content .intro-title, 
-      .fade-content .intro-line { opacity: 0; } /* Text vanishes first */
-      
-      .lift-curtain { transform: translateY(-100%); } /* Then curtain lifts */
-
+      .fade-content .intro-line { opacity: 0; transition: opacity 0.5s ease; }
 
       /* --- HEADER --- */
       header { 
@@ -128,11 +126,13 @@
       body.loaded header { opacity: 1; }
       body.loaded .search-container { opacity: 1; transform: translateY(0); }
       body.loaded .card { animation: cardSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-      body.loaded .card:nth-child(1) { animation-delay: 0.8s; }
-      body.loaded .card:nth-child(2) { animation-delay: 0.9s; }
-      body.loaded .card:nth-child(3) { animation-delay: 1.0s; }
+      body.loaded .card:nth-child(1) { animation-delay: 0.6s; }
+      body.loaded .card:nth-child(2) { animation-delay: 0.7s; }
+      body.loaded .card:nth-child(3) { animation-delay: 0.8s; }
 
+      /* --- MOBILE OPTIMIZATIONS --- */
       @media (max-width: 600px) {
+        .intro-title { font-size: 1.8em; } 
         h1 { font-size: 2em; }
         header { padding: 40px 20px 50px 20px; }
         .mobile-break { display: block; }
@@ -141,9 +141,7 @@
       }
     </style>
 </head>
-<body>
-
-    <div id="opening-curtain">
+<body class="no-scroll"> <div id="intro-shutter">
         <h1 class="intro-title">THE WOLFSONIAN</h1>
         <div class="intro-line"></div>
     </div>
@@ -221,22 +219,35 @@
     </div>
 
     <script>
+        // --- 1. FORCE SCROLL RESET ON LOAD ---
+        // Prevents browser from remembering old scroll position
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0,0);
+
         // --- ANIMATION CONTROLLER ---
         window.addEventListener('load', () => {
-            const curtain = document.getElementById('opening-curtain');
+            // Double check scroll reset when fully loaded
+            window.scrollTo(0,0);
+            
+            const shutter = document.getElementById('intro-shutter');
             const body = document.body;
-
+            
             setTimeout(() => {
-                // 1. Fade out the text first (Slicker)
-                curtain.classList.add('fade-content');
+                shutter.classList.add('fade-content');
                 
-                // 2. Wait 0.6s, then lift the curtain
                 setTimeout(() => {
-                    curtain.classList.add('lift-curtain');
-                    body.classList.add('loaded'); // Trigger gallery animations
+                    shutter.classList.add('shutter-open');
+                    
+                    // Allow scrolling again
+                    body.classList.remove('no-scroll');
+                    
+                    // Trigger gallery animations
+                    body.classList.add('loaded');
                 }, 600);
                 
-            }, 1800); // Initial delay to read the logo
+            }, 1800);
         });
 
         // --- SEARCH FUNCTIONALITY ---
