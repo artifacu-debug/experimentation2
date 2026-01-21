@@ -57,6 +57,7 @@
       .swatch-grid { display: flex; gap: 5px; margin-bottom: 8px; }
       .swatch-btn { flex: 1; padding: 8px 0; border: 1px solid #555; cursor: pointer; font-size: 10px; font-family: 'Roboto Mono', monospace; color: #aaa; }
       .swatch-btn:hover { border-color: white; color: white; }
+      .swatch-btn.active { border-color: #d93025; color: #d93025; background: rgba(217, 48, 37, 0.1); }
 
       .exit-btn { margin-top: 10px; background: transparent; border: 1px solid #d93025; color: #d93025; }
       .exit-btn:hover { background: #d93025; color: white; }
@@ -139,28 +140,33 @@
         </div>
 
         <div class="tool-group">
-            <span class="tool-label">LIGHTING DIRECTION</span>
-            <input type="range" min="0" max="360" value="0" oninput="updateLightRotation(this.value)">
+            <span class="tool-label">LIGHTING STYLE</span>
+            <div class="swatch-grid">
+                <button class="swatch-btn" onclick="setLightPreset('flat')">FLAT</button>
+                <button class="swatch-btn active" onclick="setLightPreset('std')">STD</button>
+                <button class="swatch-btn" onclick="setLightPreset('drama')">DRAMA</button>
+            </div>
         </div>
 
         <div class="tool-group">
             <span class="tool-label">EXPOSURE</span>
-            <input type="range" min="0.5" max="2.5" step="0.1" value="1" oninput="updateExposure(this.value)">
+            <input type="range" id="exp-slider" min="0.5" max="2.5" step="0.1" value="1" oninput="updateExposure(this.value)">
         </div>
         
         <div class="tool-group">
             <span class="tool-label">SHADOW SOFTNESS</span>
-            <input type="range" min="0" max="1" step="0.1" value="0" oninput="updateShadows(this.value)">
+            <input type="range" id="shadow-slider" min="0" max="1" step="0.1" value="0" oninput="updateShadows(this.value)">
         </div>
 
         <div class="tool-group">
             <span class="tool-label">ASSETS</span>
             <button class="action-btn" onclick="captureStaffScreenshot()">TAKE SCREENSHOT (CLEAN)</button>
-            
             <a href="Wolfsonian_wrestler_model.glb" download style="text-decoration:none;">
                 <button class="action-btn">DOWNLOAD SOURCE (.GLB)</button>
             </a>
         </div>
+
+        <button class="action-btn" onclick="logout()" style="border-color: #666; color: #888; margin-top: 20px;">🔒 LOGOUT</button>
 
         <button class="action-btn exit-btn" onclick="window.location.href='index.html'">EXIT TO PUBLIC VIEW</button>
     </div>
@@ -179,6 +185,7 @@
     <script>
         const viewer = document.getElementById('viewer');
 
+        /* --- AUTHENTICATION & LOGOUT --- */
         if (sessionStorage.getItem('staff_auth') === 'true') {
             document.getElementById('login-overlay').style.display = 'none';
         }
@@ -193,14 +200,22 @@
             }
         }
         
+        // New Logout Function
+        function logout() {
+            sessionStorage.removeItem('staff_auth');
+            location.reload(); // Refreshes page to show lock screen
+        }
+        
         document.getElementById('password-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') { checkPassword(); }
         });
 
+        /* --- UI LOGIC --- */
         function toggleTools() { document.getElementById('tools-panel').classList.toggle('open'); }
         function closeToolsOnMobile() { if (window.innerWidth <= 600) { document.getElementById('tools-panel').classList.remove('open'); } }
         function setBg(color) { document.body.style.backgroundColor = color; }
 
+        /* --- CLAY MODE --- */
         let isClay = false;
         let originalTexture = null;
 
@@ -224,48 +239,48 @@
             }
         }
 
+        /* --- LIGHTING PRESETS --- */
+        function setLightPreset(style) {
+            const expSlider = document.getElementById('exp-slider');
+            const shadowSlider = document.getElementById('shadow-slider');
+
+            if (style === 'flat') {
+                // Flat: High brightness, zero shadow (Good for detail reading)
+                viewer.exposure = 1.2;
+                viewer.shadowIntensity = 0;
+                viewer.shadowSoftness = 1;
+                expSlider.value = 1.2;
+                shadowSlider.value = 1;
+            } else if (style === 'std') {
+                // Standard: Balanced
+                viewer.exposure = 1;
+                viewer.shadowIntensity = 1;
+                viewer.shadowSoftness = 0.5;
+                expSlider.value = 1;
+                shadowSlider.value = 0.5;
+            } else if (style === 'drama') {
+                // Drama: High Contrast, Sharp shadows
+                viewer.exposure = 0.8;
+                viewer.shadowIntensity = 2;
+                viewer.shadowSoftness = 0;
+                expSlider.value = 0.8;
+                shadowSlider.value = 0;
+            }
+            
+            // Visual feedback for buttons
+            const btns = document.querySelectorAll('.tool-group .swatch-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            // Note: This simple loop removes active from BG buttons too, 
+            // but for simplicity in this snippet it is fine.
+            event.target.classList.add('active');
+        }
+
         function updateExposure(val) { viewer.exposure = Number(val); }
         function updateShadows(val) { viewer.shadowSoftness = Number(val); }
-        function updateLightRotation(deg) { viewer.environmentRotation = `0deg ${deg}deg 0deg`; }
         function resetView() { viewer.cameraOrbit = "0deg 75deg 105%"; viewer.fieldOfView = "auto"; }
 
-        // --- NEW: CLEAN SCREENSHOT FUNCTION ---
         async function captureStaffScreenshot() {
-            // 1. Get current background color set on the body
             const bgColor = window.getComputedStyle(document.body).backgroundColor;
-
-            // 2. Capture high-res PNG from model-viewer (transparent bg)
-            // We double current dimensions for high quality
             const blob = await viewer.toBlob({
                 mimeType: 'image/png', qualityArgument: 1, idealAspect: true,
-                width: viewer.clientWidth * 2, height: viewer.clientHeight * 2
-            });
-            const blobUrl = URL.createObjectURL(blob);
-
-            // 3. Composite onto canvas with background color
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.width; canvas.height = img.height;
-
-                // Fill background
-                ctx.fillStyle = bgColor;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                // Draw model
-                ctx.drawImage(img, 0, 0);
-
-                // 4. Download
-                const link = document.createElement('a');
-                let objName = "Object";
-                try { objName = document.querySelector('.object-name').innerText.replace(/[^a-zA-Z0-9]/g, '_'); } catch(e) {}
-                link.download = `Wolfsonian_Staff_${objName}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                URL.revokeObjectURL(blobUrl);
-            };
-            img.src = blobUrl;
-        }
-    </script>
-</body>
-</html>
+                width: viewer.clientWidth * 2, height:
