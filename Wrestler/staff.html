@@ -27,15 +27,17 @@
       .meta-label { color: #888; }
       .meta-val { color: #fff; font-weight: bold; }
 
+      /* --- TOOLS PANEL --- */
       .tools-panel {
           position: absolute; top: 50px; right: 20px;
           width: 220px;
-          background: rgba(30, 30, 30, 0.9);
+          background: rgba(30, 30, 30, 0.95); /* Slightly more opaque */
           backdrop-filter: blur(10px);
           border: 1px solid #444; border-radius: 6px;
           padding: 15px;
           z-index: 50;
-          max-height: 85vh; overflow-y: auto; /* Adds scroll if screen is short */
+          max-height: 85vh; overflow-y: auto;
+          transition: transform 0.3s ease, opacity 0.3s ease;
       }
       
       .tool-group { margin-bottom: 20px; }
@@ -52,13 +54,42 @@
       .action-btn:hover { background: #444; border-color: #777; }
       .action-btn.active { background: #d93025; border-color: #d93025; }
 
-      /* Color Swatch Grid */
       .swatch-grid { display: flex; gap: 5px; margin-bottom: 8px; }
       .swatch-btn { flex: 1; padding: 8px 0; border: 1px solid #555; cursor: pointer; font-size: 10px; font-family: 'Roboto Mono', monospace; color: #aaa; }
       .swatch-btn:hover { border-color: white; color: white; }
 
       .exit-btn { margin-top: 10px; background: transparent; border: 1px solid #d93025; color: #d93025; }
       .exit-btn:hover { background: #d93025; color: white; }
+
+      /* --- MOBILE MENU BUTTON --- */
+      #mobile-menu-btn {
+          display: none; /* Hidden on Desktop */
+          position: absolute; top: 40px; right: 20px; z-index: 60;
+          background: #d93025; color: white; border: none;
+          padding: 10px 15px; border-radius: 4px;
+          font-family: 'Roboto Mono', monospace; font-weight: bold; font-size: 12px;
+          cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      }
+
+      /* --- MOBILE RESPONSIVENESS --- */
+      @media (max-width: 600px) {
+          /* Hide Panel by default on mobile */
+          .tools-panel {
+              display: none; 
+              top: 85px; /* Push it down below the button */
+              right: 20px;
+              width: 60%; /* Make it wider on mobile */
+              max-width: 250px;
+          }
+          /* Class to toggle visibility */
+          .tools-panel.open { display: block; }
+          
+          /* Show the Menu Button */
+          #mobile-menu-btn { display: block; }
+          
+          /* Move metadata down so it doesn't overlap button */
+          .meta-data { top: auto; bottom: 20px; left: 20px; width: 60%; font-size: 10px; }
+      }
 
       #login-overlay {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -89,6 +120,8 @@
 
     <div class="staff-header">INTERNAL USE ONLY - WOLFSONIAN COLLECTION DATABASE</div>
 
+    <button id="mobile-menu-btn" onclick="toggleTools()">🛠 TOOLS</button>
+
     <div class="meta-data">
         <span class="meta-label">ACCESSION ID</span><br>
         <span class="meta-val">TD1991.36.1</span><br><br>
@@ -103,7 +136,7 @@
         <span class="meta-val">Good</span>
     </div>
 
-    <div class="tools-panel">
+    <div class="tools-panel" id="tools-panel">
         <div class="tool-group">
             <span class="tool-label">INSPECTION MODES</span>
             <button class="action-btn" id="clay-btn" onclick="toggleClayMode()">TOGGLE GEOMETRY / CLAY</button>
@@ -146,6 +179,7 @@
 
     <model-viewer 
       id="viewer"
+      onclick="closeToolsOnMobile()"
       src="Wolfsonian_wrestler_model.glb"
       alt="Staff View" 
       camera-controls 
@@ -175,10 +209,21 @@
             if (e.key === 'Enter') { checkPassword(); }
         });
 
-        // --- NEW: Background Helper ---
-        function setBg(color) {
-            document.body.style.backgroundColor = color;
+        /* --- MENU TOGGLE LOGIC --- */
+        function toggleTools() {
+            const panel = document.getElementById('tools-panel');
+            panel.classList.toggle('open');
         }
+        
+        function closeToolsOnMobile() {
+            // Only runs if screen is small
+            if (window.innerWidth <= 600) {
+                const panel = document.getElementById('tools-panel');
+                panel.classList.remove('open');
+            }
+        }
+
+        function setBg(color) { document.body.style.backgroundColor = color; }
 
         let isClay = false;
         let originalTexture = null;
