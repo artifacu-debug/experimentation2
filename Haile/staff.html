@@ -216,6 +216,12 @@
                 document.getElementById('error-msg').style.display = 'block';
             }
         }
+          // New Logout Function
+        function logout() {
+            sessionStorage.removeItem('staff_auth');
+            location.reload(); // Refreshes page to show lock screen
+        }
+        
         
         document.getElementById('password-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') { checkPassword(); }
@@ -282,4 +288,5 @@
     </script>
 </body>
 </html>
+
 
