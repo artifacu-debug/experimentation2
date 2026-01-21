@@ -31,7 +31,7 @@
       .tools-panel {
           position: absolute; top: 50px; right: 20px;
           width: 220px;
-          background: rgba(30, 30, 30, 0.95); /* Slightly more opaque */
+          background: rgba(30, 30, 30, 0.95);
           backdrop-filter: blur(10px);
           border: 1px solid #444; border-radius: 6px;
           padding: 15px;
@@ -61,9 +61,8 @@
       .exit-btn { margin-top: 10px; background: transparent; border: 1px solid #d93025; color: #d93025; }
       .exit-btn:hover { background: #d93025; color: white; }
 
-      /* --- MOBILE MENU BUTTON --- */
       #mobile-menu-btn {
-          display: none; /* Hidden on Desktop */
+          display: none;
           position: absolute; top: 40px; right: 20px; z-index: 60;
           background: #d93025; color: white; border: none;
           padding: 10px 15px; border-radius: 4px;
@@ -71,23 +70,10 @@
           cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       }
 
-      /* --- MOBILE RESPONSIVENESS --- */
       @media (max-width: 600px) {
-          /* Hide Panel by default on mobile */
-          .tools-panel {
-              display: none; 
-              top: 85px; /* Push it down below the button */
-              right: 20px;
-              width: 60%; /* Make it wider on mobile */
-              max-width: 250px;
-          }
-          /* Class to toggle visibility */
+          .tools-panel { display: none; top: 85px; right: 20px; width: 60%; max-width: 250px; }
           .tools-panel.open { display: block; }
-          
-          /* Show the Menu Button */
           #mobile-menu-btn { display: block; }
-          
-          /* Move metadata down so it doesn't overlap button */
           .meta-data { top: auto; bottom: 20px; left: 20px; width: 60%; font-size: 10px; }
       }
 
@@ -127,7 +113,7 @@
         <span class="meta-val">TD1991.36.1</span><br><br>
         
         <span class="meta-label">OBJECT</span><br>
-        <span class="meta-val">Wrestler (1929)</span><br><br>
+        <span class="meta-val object-name">Wrestler (1929)</span><br><br>
         
         <span class="meta-label">MATERIAL</span><br>
         <span class="meta-val">Cast Aluminum</span><br><br>
@@ -169,6 +155,8 @@
 
         <div class="tool-group">
             <span class="tool-label">ASSETS</span>
+            <button class="action-btn" onclick="captureStaffScreenshot()">TAKE SCREENSHOT (CLEAN)</button>
+            
             <a href="Wolfsonian_wrestler_model.glb" download style="text-decoration:none;">
                 <button class="action-btn">DOWNLOAD SOURCE (.GLB)</button>
             </a>
@@ -209,20 +197,8 @@
             if (e.key === 'Enter') { checkPassword(); }
         });
 
-        /* --- MENU TOGGLE LOGIC --- */
-        function toggleTools() {
-            const panel = document.getElementById('tools-panel');
-            panel.classList.toggle('open');
-        }
-        
-        function closeToolsOnMobile() {
-            // Only runs if screen is small
-            if (window.innerWidth <= 600) {
-                const panel = document.getElementById('tools-panel');
-                panel.classList.remove('open');
-            }
-        }
-
+        function toggleTools() { document.getElementById('tools-panel').classList.toggle('open'); }
+        function closeToolsOnMobile() { if (window.innerWidth <= 600) { document.getElementById('tools-panel').classList.remove('open'); } }
         function setBg(color) { document.body.style.backgroundColor = color; }
 
         let isClay = false;
@@ -232,7 +208,6 @@
             if (!viewer.model || !viewer.model.materials || viewer.model.materials.length === 0) return;
             const material = viewer.model.materials[0];
             const btn = document.getElementById('clay-btn');
-            
             if (!isClay) {
                 originalTexture = material.pbrMetallicRoughness.baseColorTexture.texture;
                 material.pbrMetallicRoughness.baseColorTexture.setTexture(null);
@@ -253,6 +228,44 @@
         function updateShadows(val) { viewer.shadowSoftness = Number(val); }
         function updateLightRotation(deg) { viewer.environmentRotation = `0deg ${deg}deg 0deg`; }
         function resetView() { viewer.cameraOrbit = "0deg 75deg 105%"; viewer.fieldOfView = "auto"; }
+
+        // --- NEW: CLEAN SCREENSHOT FUNCTION ---
+        async function captureStaffScreenshot() {
+            // 1. Get current background color set on the body
+            const bgColor = window.getComputedStyle(document.body).backgroundColor;
+
+            // 2. Capture high-res PNG from model-viewer (transparent bg)
+            // We double current dimensions for high quality
+            const blob = await viewer.toBlob({
+                mimeType: 'image/png', qualityArgument: 1, idealAspect: true,
+                width: viewer.clientWidth * 2, height: viewer.clientHeight * 2
+            });
+            const blobUrl = URL.createObjectURL(blob);
+
+            // 3. Composite onto canvas with background color
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width; canvas.height = img.height;
+
+                // Fill background
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                // Draw model
+                ctx.drawImage(img, 0, 0);
+
+                // 4. Download
+                const link = document.createElement('a');
+                let objName = "Object";
+                try { objName = document.querySelector('.object-name').innerText.replace(/[^a-zA-Z0-9]/g, '_'); } catch(e) {}
+                link.download = `Wolfsonian_Staff_${objName}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                URL.revokeObjectURL(blobUrl);
+            };
+            img.src = blobUrl;
+        }
     </script>
 </body>
 </html>
