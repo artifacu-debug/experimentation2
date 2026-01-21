@@ -35,6 +35,7 @@
           border: 1px solid #444; border-radius: 6px;
           padding: 15px;
           z-index: 50;
+          max-height: 85vh; overflow-y: auto; /* Adds scroll if screen is short */
       }
       
       .tool-group { margin-bottom: 20px; }
@@ -50,6 +51,11 @@
       }
       .action-btn:hover { background: #444; border-color: #777; }
       .action-btn.active { background: #d93025; border-color: #d93025; }
+
+      /* Color Swatch Grid */
+      .swatch-grid { display: flex; gap: 5px; margin-bottom: 8px; }
+      .swatch-btn { flex: 1; padding: 8px 0; border: 1px solid #555; cursor: pointer; font-size: 10px; font-family: 'Roboto Mono', monospace; color: #aaa; }
+      .swatch-btn:hover { border-color: white; color: white; }
 
       .exit-btn { margin-top: 10px; background: transparent; border: 1px solid #d93025; color: #d93025; }
       .exit-btn:hover { background: #d93025; color: white; }
@@ -105,6 +111,15 @@
         </div>
 
         <div class="tool-group">
+            <span class="tool-label">STUDIO BACKGROUND</span>
+            <div class="swatch-grid">
+                <button class="swatch-btn" style="background:#222;" onclick="setBg('#222')">DARK</button>
+                <button class="swatch-btn" style="background:#fff; color:#222;" onclick="setBg('#ffffff')">WHITE</button>
+                <button class="swatch-btn" style="background:#00ff00; color:#000;" onclick="setBg('#00ff00')">GREEN</button>
+            </div>
+        </div>
+
+        <div class="tool-group">
             <span class="tool-label">LIGHTING DIRECTION</span>
             <input type="range" min="0" max="360" value="0" oninput="updateLightRotation(this.value)">
         </div>
@@ -117,6 +132,13 @@
         <div class="tool-group">
             <span class="tool-label">SHADOW SOFTNESS</span>
             <input type="range" min="0" max="1" step="0.1" value="0" oninput="updateShadows(this.value)">
+        </div>
+
+        <div class="tool-group">
+            <span class="tool-label">ASSETS</span>
+            <a href="Wolfsonian_wrestler_model.glb" download style="text-decoration:none;">
+                <button class="action-btn">DOWNLOAD SOURCE (.GLB)</button>
+            </a>
         </div>
 
         <button class="action-btn exit-btn" onclick="window.location.href='index.html'">EXIT TO PUBLIC VIEW</button>
@@ -153,6 +175,11 @@
             if (e.key === 'Enter') { checkPassword(); }
         });
 
+        // --- NEW: Background Helper ---
+        function setBg(color) {
+            document.body.style.backgroundColor = color;
+        }
+
         let isClay = false;
         let originalTexture = null;
 
@@ -184,4 +211,3 @@
     </script>
 </body>
 </html>
-
