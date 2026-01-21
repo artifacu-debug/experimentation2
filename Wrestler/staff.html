@@ -283,4 +283,27 @@
             const bgColor = window.getComputedStyle(document.body).backgroundColor;
             const blob = await viewer.toBlob({
                 mimeType: 'image/png', qualityArgument: 1, idealAspect: true,
-                width: viewer.clientWidth * 2, height:
+                width: viewer.clientWidth * 2, height: viewer.clientHeight * 2
+            });
+            const blobUrl = URL.createObjectURL(blob);
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width; canvas.height = img.height;
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+                const link = document.createElement('a');
+                let objName = "Object";
+                try { objName = document.querySelector('.object-name').innerText.replace(/[^a-zA-Z0-9]/g, '_'); } catch(e) {}
+                link.download = `Wolfsonian_Staff_${objName}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                URL.revokeObjectURL(blobUrl);
+            };
+            img.src = blobUrl;
+        }
+    </script>
+</body>
+</html>
