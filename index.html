@@ -20,7 +20,7 @@
       /* --- SEARCH BAR --- */
       .search-container {
           max-width: 1000px; margin: 25px auto 0; padding: 0 20px;
-          display: flex; justify-content: flex-end; /* Aligns search to right on desktop */
+          display: flex; justify-content: flex-end; /* Desktop: Align right */
           height: 40px;
       }
       
@@ -30,10 +30,15 @@
           font-family: 'Lato', sans-serif; font-size: 15px;
           background-color: white; outline: none;
           transition: width 0.3s ease, box-shadow 0.3s;
+          
+          /* Add search icon as background image */
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: 10px center;
+          background-size: 20px;
+          padding-left: 35px; /* Make room for icon */
       }
       #search-input:focus { border-color: #1a1a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-
-      #mobile-search-icon { display: none; } /* Hidden on desktop */
 
       /* --- GALLERY --- */
       .gallery-container { max-width: 1000px; margin: 20px auto 40px; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
@@ -68,25 +73,17 @@
         .mobile-break { display: block; }
         .staff-lock { opacity: 0.5; }
         
-        /* Mobile Search Styles */
-        .search-container { justify-content: center; position: relative; }
+        /* Mobile Search: Full Width */
+        .search-container { 
+            justify-content: center; /* Center it */
+            margin-top: 20px;
+        }
         
         #search-input {
-            display: none; /* Hidden by default */
-            width: 100%; /* Full width when active */
+            width: 100%; /* Stretch to fill screen */
+            font-size: 16px; /* Prevents zoom on iOS */
+            padding: 10px 15px 10px 40px; /* Larger tap area */
         }
-        
-        #mobile-search-icon {
-            display: flex; align-items: center; justify-content: center;
-            width: 40px; height: 40px;
-            background: white; border: 1px solid #ddd; border-radius: 50%;
-            cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        #mobile-search-icon svg { width: 18px; height: 18px; fill: #555; }
-        
-        /* State: Search Active */
-        .search-container.active #search-input { display: block; }
-        .search-container.active #mobile-search-icon { display: none; }
       }
     </style>
 </head>
@@ -97,10 +94,7 @@
         <div class="subtitle">Explore our collection of digitized artifacts</div>
     </header>
 
-    <div class="search-container" id="search-container">
-        <div id="mobile-search-icon" onclick="activateSearch()">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        </div>
+    <div class="search-container">
         <input type="text" id="search-input" placeholder="Search collection..." onkeyup="filterGallery()">
     </div>
 
@@ -183,20 +177,6 @@
                 }
             }
         }
-
-        // --- MOBILE TOGGLE ---
-        function activateSearch() {
-            const container = document.getElementById('search-container');
-            container.classList.add('active');
-            // Wait small amount for transition then focus
-            setTimeout(() => {
-                document.getElementById('search-input').focus();
-            }, 100);
-        }
     </script>
 </body>
 </html>
-    </div>
-</body>
-</html>
-
