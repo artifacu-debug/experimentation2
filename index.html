@@ -24,12 +24,16 @@
           height: 40px;
       }
       
-      #search-input {
-          width: 250px; padding: 0 15px; height: 100%;
-          border: 1px solid #ddd; border-radius: 20px;
-          font-family: 'Lato', sans-serif; font-size: 15px;
-          background-color: white; outline: none;
-          transition: width 0.3s ease, box-shadow 0.3s;
+     #search-input {
+            width: 100%; /* Stretch to fill screen */
+            
+            /* SLIMMER HEIGHT FIX */
+            height: 35px; 
+            padding: 0 15px 0 40px; /* 0px top/bottom, keeps room for icon on left */
+            
+            font-size: 16px; /* Prevents zoom on iOS */
+            border-radius: 18px; /* Slightly tighter radius to match new height */
+        }
           
           /* Add search icon as background image */
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
@@ -180,3 +184,4 @@
     </script>
 </body>
 </html>
+
