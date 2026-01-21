@@ -77,18 +77,41 @@
           .meta-data { top: auto; bottom: 20px; left: 20px; width: 60%; font-size: 10px; }
       }
 
+      /* --- LOGIN OVERLAY (FIXED ALIGNMENT) --- */
       #login-overlay {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
           background: #111; z-index: 9999;
           display: flex; flex-direction: column; align-items: center; justify-content: center;
       }
       .login-box { text-align: center; width: 300px; }
+      
+      /* Updated Input & Button to match perfectly */
       .login-input {
-          width: 100%; padding: 10px; margin: 15px 0;
-          background: #222; border: 1px solid #444; color: white;
-          font-family: 'Roboto Mono', monospace; text-align: center; letter-spacing: 2px;
+          width: 100%; 
+          padding: 12px; 
+          margin: 15px 0 10px 0; /* Adjusted margin */
+          background: #222; 
+          border: 1px solid #444; 
+          color: white;
+          font-family: 'Roboto Mono', monospace; 
+          text-align: center; 
+          letter-spacing: 2px;
+          box-sizing: border-box; /* Key Fix: Includes padding in width */
       }
-      .login-btn { width: 100%; padding: 10px; background: #fff; border: none; font-weight: bold; cursor: pointer; }
+      
+      .login-btn {
+          width: 100%; 
+          padding: 12px; 
+          background: #fff; 
+          border: 1px solid #fff; /* Added border to match input size exactly */
+          font-weight: bold; 
+          cursor: pointer;
+          font-family: 'Roboto Mono', monospace; 
+          letter-spacing: 1px;
+          box-sizing: border-box; /* Key Fix: Includes padding in width */
+      }
+      
+      .login-btn:hover { background: #ddd; border-color: #ddd; }
 
       model-viewer { width: 100vw; height: 100vh; outline: none; --poster-color: transparent; }
    </style>
@@ -259,3 +282,4 @@
     </script>
 </body>
 </html>
+
