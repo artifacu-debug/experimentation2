@@ -3,167 +3,218 @@
 <head>
     <title>INTERNAL - Wrestler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
    <style>
-      body { margin: 0; height: 100%; width: 100%; background-color: #222; font-family: 'Roboto Mono', monospace; overflow: hidden; color: #ddd; }
-      
-      .staff-header {
-          position: absolute; top: 0; left: 0; right: 0; height: 28px;
-          background: #d93025; color: white;
-          font-size: 11px; font-weight: 700;
-          display: flex; align-items: center; justify-content: center; letter-spacing: 2px;
-          z-index: 100;
+      /* --- THEME VARIABLES --- */
+      :root {
+          --bg-dark: #1a1a1a;
+          --panel-bg: rgba(30, 30, 30, 0.85);
+          --accent-red: #d93025;
+          --text-main: #e0e0e0;
+          --text-muted: #888;
       }
 
+      body { 
+          margin: 0; height: 100%; width: 100%; 
+          background-color: var(--bg-dark); 
+          font-family: 'Lato', sans-serif; 
+          overflow: hidden; color: var(--text-main); 
+      }
+      
+      /* --- SECURITY HEADER --- */
+      .staff-header {
+          position: absolute; top: 0; left: 0; right: 0; height: 32px;
+          background: var(--accent-red); color: white;
+          font-family: 'Lato', sans-serif; font-size: 10px; font-weight: 700;
+          letter-spacing: 3px; text-transform: uppercase;
+          display: flex; align-items: center; justify-content: center;
+          z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      /* --- METADATA OVERLAY --- */
       .meta-data {
-          position: absolute; top: 50px; left: 20px;
-          background: rgba(0,0,0,0.5); padding: 15px; border-radius: 4px;
-          border-left: 3px solid #d93025;
-          font-size: 11px; line-height: 1.6;
+          position: absolute; top: 60px; left: 30px;
           z-index: 10; pointer-events: none;
       }
-      .meta-label { color: #888; }
-      .meta-val { color: #fff; font-weight: bold; }
+      .meta-block { margin-bottom: 25px; border-left: 1px solid var(--accent-red); padding-left: 15px; }
+      .meta-label { 
+          font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; 
+          color: var(--text-muted); display: block; margin-bottom: 4px;
+      }
+      .meta-val { 
+          font-family: 'Playfair Display', serif; font-size: 1.2em; 
+          color: white; font-weight: 400; font-style: italic;
+      }
+      .meta-val.id-code { font-family: 'Lato', sans-serif; font-style: normal; font-size: 1em; }
 
       /* --- TOOLS PANEL --- */
       .tools-panel {
-          position: absolute; top: 50px; right: 20px;
-          width: 220px;
-          background: rgba(30, 30, 30, 0.95);
-          backdrop-filter: blur(10px);
-          border: 1px solid #444; border-radius: 6px;
-          padding: 15px;
+          position: absolute; top: 60px; right: 30px;
+          width: 240px;
+          background: var(--panel-bg);
+          backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+          border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+          padding: 20px;
           z-index: 50;
           max-height: 85vh; overflow-y: auto;
-          transition: transform 0.3s ease, opacity 0.3s ease;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+          transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
       }
       
-      .tool-group { margin-bottom: 20px; }
-      .tool-label { font-size: 10px; text-transform: uppercase; color: #888; margin-bottom: 8px; display: block; }
+      .tool-group { margin-bottom: 25px; }
+      .tool-label { 
+          font-size: 9px; font-weight: 700; letter-spacing: 1.5px; 
+          text-transform: uppercase; color: var(--text-muted); 
+          margin-bottom: 12px; display: block; 
+      }
       
-      input[type=range] { width: 100%; accent-color: #d93025; cursor: pointer; }
+      /* --- CUSTOM SLIDERS --- */
+      input[type=range] {
+          -webkit-appearance: none; width: 100%; background: transparent;
+      }
+      input[type=range]::-webkit-slider-runnable-track {
+          width: 100%; height: 2px; background: #444; border-radius: 2px;
+      }
+      input[type=range]::-webkit-slider-thumb {
+          -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%;
+          background: var(--accent-red); margin-top: -6px; cursor: pointer;
+          border: 2px solid #222; transition: transform 0.1s;
+      }
+      input[type=range]:active::-webkit-slider-thumb { transform: scale(1.3); }
       
+      /* --- BUTTONS --- */
       .action-btn {
-          width: 100%; padding: 8px; margin-bottom: 8px;
-          background: #333; border: 1px solid #555; color: white;
-          font-family: 'Roboto Mono', monospace; font-size: 10px; cursor: pointer;
-          transition: all 0.2s;
+          width: 100%; padding: 10px 0; margin-bottom: 8px;
+          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
+          color: white; font-family: 'Lato', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px;
+          cursor: pointer; transition: all 0.2s; border-radius: 4px;
       }
-      .action-btn:hover { background: #444; border-color: #777; }
-      .action-btn.active { background: #d93025; border-color: #d93025; }
+      .action-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+      .action-btn.active { background: var(--accent-red); border-color: var(--accent-red); color: white; }
 
-      .swatch-grid { display: flex; gap: 5px; margin-bottom: 8px; }
-      .swatch-btn { flex: 1; padding: 8px 0; border: 1px solid #555; cursor: pointer; font-size: 10px; font-family: 'Roboto Mono', monospace; color: #aaa; }
+      /* Swatches */
+      .swatch-grid { display: flex; gap: 8px; margin-bottom: 8px; }
+      .swatch-btn { 
+          flex: 1; padding: 10px 0; border: 1px solid rgba(255,255,255,0.1); background: transparent;
+          cursor: pointer; font-size: 9px; font-weight: 700; font-family: 'Lato', sans-serif; 
+          color: var(--text-muted); border-radius: 4px; transition: all 0.2s;
+      }
       .swatch-btn:hover { border-color: white; color: white; }
-      .swatch-btn.active { border-color: #d93025; color: #d93025; background: rgba(217, 48, 37, 0.1); }
+      .swatch-btn.active { border-color: var(--accent-red); color: var(--accent-red); background: rgba(217, 48, 37, 0.1); }
 
-      .exit-btn { margin-top: 10px; background: transparent; border: 1px solid #d93025; color: #d93025; }
-      .exit-btn:hover { background: #d93025; color: white; }
+      .logout-btn { border-color: #444; color: #666; margin-top: 15px; }
+      .logout-btn:hover { border-color: var(--accent-red); color: var(--accent-red); background: transparent; }
 
+      .exit-link { 
+          display: block; text-align: center; margin-top: 15px; 
+          font-size: 9px; color: #666; text-decoration: none; letter-spacing: 1px; transition: color 0.2s;
+      }
+      .exit-link:hover { color: white; }
+
+      /* --- MOBILE --- */
       #mobile-menu-btn {
           display: none;
-          position: absolute; top: 40px; right: 20px; z-index: 60;
-          background: #d93025; color: white; border: none;
-          padding: 10px 15px; border-radius: 4px;
-          font-family: 'Roboto Mono', monospace; font-weight: bold; font-size: 12px;
-          cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+          position: absolute; top: 45px; right: 20px; z-index: 60;
+          background: #222; color: white; border: 1px solid #444;
+          padding: 8px 12px; border-radius: 4px;
+          font-family: 'Lato', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 1px;
+          cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       }
 
       @media (max-width: 600px) {
-          .tools-panel { display: none; top: 85px; right: 20px; width: 60%; max-width: 250px; }
+          .tools-panel { display: none; top: 90px; right: 20px; width: 65%; max-width: 280px; }
           .tools-panel.open { display: block; }
           #mobile-menu-btn { display: block; }
-          .meta-data { top: auto; bottom: 20px; left: 20px; width: 60%; font-size: 10px; }
+          .meta-data { top: auto; bottom: 30px; left: 20px; }
+          .meta-block { margin-bottom: 15px; border-left: none; padding-left: 0; }
+          .meta-val { font-size: 1.1em; }
       }
 
-     /* --- LOGIN OVERLAY (FIXED ALIGNMENT) --- */
+      /* --- LOGIN --- */
       #login-overlay {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
           background: #111; z-index: 9999;
           display: flex; flex-direction: column; align-items: center; justify-content: center;
       }
-      .login-box { text-align: center; width: 300px; }
+      .login-box { text-align: center; width: 300px; padding: 40px; border: 1px solid #333; border-radius: 8px; }
       
-      /* Updated Input & Button to match perfectly */
       .login-input {
-          width: 100%; 
-          padding: 12px; 
-          margin: 15px 0 10px 0; /* Adjusted margin */
-          background: #222; 
-          border: 1px solid #444; 
-          color: white;
-          font-family: 'Roboto Mono', monospace; 
-          text-align: center; 
-          letter-spacing: 2px;
-          box-sizing: border-box; /* Key Fix: Includes padding in width */
+          width: 100%; padding: 14px; margin: 20px 0 10px 0;
+          background: #222; border: 1px solid #444; color: white;
+          font-family: 'Lato', sans-serif; text-align: center; letter-spacing: 2px;
+          box-sizing: border-box; border-radius: 4px; transition: border-color 0.2s;
       }
+      .login-input:focus { outline: none; border-color: var(--accent-red); }
       
       .login-btn {
-          width: 100%; 
-          padding: 12px; 
-          background: #fff; 
-          border: 1px solid #fff; /* Added border to match input size exactly */
-          font-weight: bold; 
-          cursor: pointer;
-          font-family: 'Roboto Mono', monospace; 
-          letter-spacing: 1px;
-          box-sizing: border-box; /* Key Fix: Includes padding in width */
+          width: 100%; padding: 14px; background: white; border: 1px solid white;
+          font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 1px; font-size: 11px;
+          cursor: pointer; box-sizing: border-box; border-radius: 4px; transition: all 0.2s;
       }
-      
       .login-btn:hover { background: #ddd; border-color: #ddd; }
 
-      model-viewer { width: 100vw; height: 100vh; outline: none; --poster-color: transparent; }
+      model-viewer { width: 100vw; height: 100vh; outline: none; --poster-color: transparent; background-color: var(--bg-dark); }
    </style>
 </head>
 <body>
 
     <div id="login-overlay">
         <div class="login-box">
-            <h2 style="color:white; font-size: 14px; letter-spacing: 1px;">RESTRICTED ACCESS</h2>
-            <input type="password" id="password-input" class="login-input" placeholder="ENTER PASSCODE">
+            <h2 style="color:white; font-family:'Playfair Display', serif; font-weight:400; margin:0; letter-spacing: 1px;">Restricted Access</h2>
+            <div style="width: 40px; height: 1px; background: var(--accent-red); margin: 15px auto;"></div>
+            <input type="password" id="password-input" class="login-input" placeholder="PASSCODE">
             <button class="login-btn" onclick="checkPassword()">AUTHENTICATE</button>
-            <div id="error-msg" style="color: #d93025; font-size: 10px; margin-top: 10px; display: none;">ACCESS DENIED</div>
+            <div id="error-msg" style="color: var(--accent-red); font-size: 10px; margin-top: 15px; display: none; letter-spacing: 1px;">ACCESS DENIED</div>
         </div>
     </div>
 
-    <div class="staff-header">INTERNAL USE ONLY - WOLFSONIAN COLLECTION DATABASE</div>
+    <div class="staff-header">Wolfsonian Collection Database &bull; Internal</div>
 
-    <button id="mobile-menu-btn" onclick="toggleTools()">🛠 TOOLS</button>
+    <button id="mobile-menu-btn" onclick="toggleTools()">TOOLS</button>
 
     <div class="meta-data">
-        <span class="meta-label">ACCESSION ID</span><br>
-        <span class="meta-val">TD1991.36.1</span><br><br>
-        
-        <span class="meta-label">OBJECT</span><br>
-        <span class="meta-val object-name">Wrestler (1929)</span><br><br>
-        
-        <span class="meta-label">MATERIAL</span><br>
-        <span class="meta-val">Cast Aluminum</span><br><br>
-        
-        <span class="meta-label">CONDITION</span><br>
-        <span class="meta-val">Good</span>
+        <div class="meta-block">
+            <span class="meta-label">Accession ID</span>
+            <span class="meta-val id-code">TD1991.36.1</span>
+        </div>
+        <div class="meta-block">
+            <span class="meta-label">Object</span>
+            <span class="meta-val object-name">Wrestler (1929)</span>
+        </div>
+        <div class="meta-block">
+            <span class="meta-label">Material</span>
+            <span class="meta-val">Cast Aluminum</span>
+        </div>
+        <div class="meta-block">
+            <span class="meta-label">Condition</span>
+            <span class="meta-val">Stable</span>
+        </div>
     </div>
 
     <div class="tools-panel" id="tools-panel">
         <div class="tool-group">
-            <span class="tool-label">INSPECTION MODES</span>
-            <button class="action-btn" id="clay-btn" onclick="toggleClayMode()">TOGGLE GEOMETRY / CLAY</button>
-            <button class="action-btn" onclick="resetView()">RESET VIEW ALIGNMENT</button>
+            <span class="tool-label">Inspection</span>
+            <button class="action-btn" id="clay-btn" onclick="toggleClayMode()">TOGGLE CLAY RENDER</button>
+            <button class="action-btn" onclick="resetView()">RESET CAMERA</button>
         </div>
 
         <div class="tool-group">
-            <span class="tool-label">STUDIO BACKGROUND</span>
+            <span class="tool-label">Background</span>
             <div class="swatch-grid">
-                <button class="swatch-btn" style="background:#222;" onclick="setBg('#222')">DARK</button>
-                <button class="swatch-btn" style="background:#fff; color:#222;" onclick="setBg('#ffffff')">WHITE</button>
-                <button class="swatch-btn" style="background:#00ff00; color:#000;" onclick="setBg('#00ff00')">GREEN</button>
+                <button class="swatch-btn" style="background:#1a1a1a;" onclick="setBg('#1a1a1a')">DARK</button>
+                <button class="swatch-btn" style="background:#f4f4f4; color:#222;" onclick="setBg('#f4f4f4')">LIGHT</button>
+                <button class="swatch-btn" style="background:#00ff00; color:#000;" onclick="setBg('#00ff00')">KEY</button>
             </div>
         </div>
 
         <div class="tool-group">
-            <span class="tool-label">LIGHTING STYLE</span>
+            <span class="tool-label">Lighting Style</span>
             <div class="swatch-grid">
                 <button class="swatch-btn" onclick="setLightPreset('flat')">FLAT</button>
                 <button class="swatch-btn active" onclick="setLightPreset('std')">STD</button>
@@ -172,26 +223,25 @@
         </div>
 
         <div class="tool-group">
-            <span class="tool-label">EXPOSURE</span>
+            <span class="tool-label">Exposure</span>
             <input type="range" id="exp-slider" min="0.5" max="2.5" step="0.1" value="1" oninput="updateExposure(this.value)">
         </div>
         
         <div class="tool-group">
-            <span class="tool-label">SHADOW SOFTNESS</span>
+            <span class="tool-label">Shadow Softness</span>
             <input type="range" id="shadow-slider" min="0" max="1" step="0.1" value="0" oninput="updateShadows(this.value)">
         </div>
 
         <div class="tool-group">
-            <span class="tool-label">ASSETS</span>
-            <button class="action-btn" onclick="captureStaffScreenshot()">TAKE SCREENSHOT (CLEAN)</button>
+            <span class="tool-label">Assets</span>
+            <button class="action-btn" onclick="captureStaffScreenshot()">CAPTURE SCREENSHOT</button>
             <a href="Wolfsonian_wrestler_model.glb" download style="text-decoration:none;">
-                <button class="action-btn">DOWNLOAD SOURCE (.GLB)</button>
+                <button class="action-btn">DOWNLOAD .GLB</button>
             </a>
         </div>
 
-        <button class="action-btn" onclick="logout()" style="border-color: #666; color: #888; margin-top: 20px;">🔒 LOGOUT</button>
-
-        <button class="action-btn exit-btn" onclick="window.location.href='index.html'">EXIT TO PUBLIC VIEW</button>
+        <button class="action-btn logout-btn" onclick="logout()">🔒 LOCK DEVICE</button>
+        <a href="index.html" class="exit-link">&larr; EXIT TO PUBLIC GALLERY</a>
     </div>
 
     <model-viewer 
@@ -208,7 +258,7 @@
     <script>
         const viewer = document.getElementById('viewer');
 
-        /* --- AUTHENTICATION & LOGOUT --- */
+        // --- AUTH ---
         if (sessionStorage.getItem('staff_auth') === 'true') {
             document.getElementById('login-overlay').style.display = 'none';
         }
@@ -222,79 +272,54 @@
                 document.getElementById('error-msg').style.display = 'block';
             }
         }
-        
-        // New Logout Function
         function logout() {
             sessionStorage.removeItem('staff_auth');
-            location.reload(); // Refreshes page to show lock screen
+            location.reload(); 
         }
-        
         document.getElementById('password-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') { checkPassword(); }
         });
 
-        /* --- UI LOGIC --- */
+        // --- UI ---
         function toggleTools() { document.getElementById('tools-panel').classList.toggle('open'); }
         function closeToolsOnMobile() { if (window.innerWidth <= 600) { document.getElementById('tools-panel').classList.remove('open'); } }
-        function setBg(color) { document.body.style.backgroundColor = color; }
+        function setBg(color) { document.body.style.backgroundColor = color; viewer.style.backgroundColor = color; }
 
-        /* --- CLAY MODE --- */
+        // --- FEATURES ---
         let isClay = false;
         let originalTexture = null;
 
         function toggleClayMode() {
-            if (!viewer.model || !viewer.model.materials || viewer.model.materials.length === 0) return;
+            if (!viewer.model || !viewer.model.materials) return;
             const material = viewer.model.materials[0];
             const btn = document.getElementById('clay-btn');
+            
             if (!isClay) {
                 originalTexture = material.pbrMetallicRoughness.baseColorTexture.texture;
                 material.pbrMetallicRoughness.baseColorTexture.setTexture(null);
                 material.pbrMetallicRoughness.setBaseColorFactor([0.8, 0.8, 0.8, 1]);
                 btn.classList.add('active');
-                btn.innerText = "RESTORE TEXTURE";
                 isClay = true;
             } else {
                 material.pbrMetallicRoughness.baseColorTexture.setTexture(originalTexture);
                 material.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 1]);
                 btn.classList.remove('active');
-                btn.innerText = "TOGGLE GEOMETRY / CLAY";
                 isClay = false;
             }
         }
 
-        /* --- LIGHTING PRESETS --- */
         function setLightPreset(style) {
-            const expSlider = document.getElementById('exp-slider');
-            const shadowSlider = document.getElementById('shadow-slider');
-
-            if (style === 'flat') {
-                // Flat: High brightness, zero shadow (Good for detail reading)
-                viewer.exposure = 1.2;
-                viewer.shadowIntensity = 0;
-                viewer.shadowSoftness = 1;
-                expSlider.value = 1.2;
-                shadowSlider.value = 1;
-            } else if (style === 'std') {
-                // Standard: Balanced
-                viewer.exposure = 1;
-                viewer.shadowIntensity = 1;
-                viewer.shadowSoftness = 0.5;
-                expSlider.value = 1;
-                shadowSlider.value = 0.5;
-            } else if (style === 'drama') {
-                // Drama: High Contrast, Sharp shadows
-                viewer.exposure = 0.8;
-                viewer.shadowIntensity = 2;
-                viewer.shadowSoftness = 0;
-                expSlider.value = 0.8;
-                shadowSlider.value = 0;
-            }
+            const exp = document.getElementById('exp-slider');
+            const shd = document.getElementById('shadow-slider');
+            if (style === 'flat') { updateExposure(1.2); updateShadows(1); viewer.shadowIntensity = 0; }
+            else if (style === 'std') { updateExposure(1); updateShadows(0.5); viewer.shadowIntensity = 1; }
+            else if (style === 'drama') { updateExposure(0.8); updateShadows(0); viewer.shadowIntensity = 2; }
             
-            // Visual feedback for buttons
+            if(exp) exp.value = viewer.exposure;
+            if(shd) shd.value = viewer.shadowSoftness;
+
             const btns = document.querySelectorAll('.tool-group .swatch-btn');
             btns.forEach(b => b.classList.remove('active'));
-            // Note: This simple loop removes active from BG buttons too, 
-            // but for simplicity in this snippet it is fine.
             event.target.classList.add('active');
         }
 
@@ -304,10 +329,7 @@
 
         async function captureStaffScreenshot() {
             const bgColor = window.getComputedStyle(document.body).backgroundColor;
-            const blob = await viewer.toBlob({
-                mimeType: 'image/png', qualityArgument: 1, idealAspect: true,
-                width: viewer.clientWidth * 2, height: viewer.clientHeight * 2
-            });
+            const blob = await viewer.toBlob({ mimeType: 'image/png', qualityArgument: 1, idealAspect: true, width: 2000, height: 2000 });
             const blobUrl = URL.createObjectURL(blob);
             const img = new Image();
             img.onload = () => {
@@ -330,4 +352,3 @@
     </script>
 </body>
 </html>
-
