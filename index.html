@@ -9,25 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
-      /* --- GLOBAL VARIABLES --- */
-      :root {
-          --bg-color: #f9f9f9;
-          --text-main: #1a1a1a;
-          --text-muted: #666;
-          --accent-red: #d93025; /* Wolfsonian Red */
-          --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
-          --card-hover-shadow: 0 20px 50px -10px rgba(0,0,0,0.15);
-      }
-
-      body { margin: 0; padding: 0; background-color: var(--bg-color); font-family: 'Lato', sans-serif; color: var(--text-main); }
+      body { margin: 0; padding: 0; background-color: #f9f9f9; font-family: 'Lato', sans-serif; color: #1a1a1a; }
       
       /* Stop user from scrolling while intro plays */
       body.no-scroll { overflow: hidden; height: 100vh; }
 
-      /* --- INTRO LOADER --- */
+      /* --- INTRO LOADER (THE SHUTTER) --- */
       #intro-shutter {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-          background-color: #1a1a1a;
+          background-color: #1a1a1a; /* Dark Wolfsonian Grey */
           z-index: 99999;
           display: flex; flex-direction: column; justify-content: center; align-items: center;
           transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
@@ -36,7 +26,9 @@
       .intro-title {
           font-family: 'Playfair Display', serif;
           font-size: 3em; color: white; margin: 0;
-          opacity: 0; text-align: center; padding: 0 20px; 
+          opacity: 0; 
+          text-align: center; 
+          padding: 0 20px; 
           transform: translateY(20px);
           animation: textReveal 1s ease-out forwards 0.2s;
       }
@@ -50,97 +42,85 @@
       @keyframes lineExpand { to { width: 100px; } }
 
       .shutter-open { transform: translateY(-100%); }
-      .fade-content .intro-title, .fade-content .intro-line { opacity: 0; transition: opacity 0.5s ease; }
+
+      /* Animation States */
+      .fade-content .intro-title, 
+      .fade-content .intro-line { opacity: 0; transition: opacity 0.5s ease; }
 
       /* --- HEADER --- */
       header { 
-          text-align: center; padding: 60px 20px 50px 20px; 
-          background-color: transparent; /* Cleaner look without hard white box */
+          text-align: center; padding: 50px 20px 40px 20px; 
+          background-color: #ffffff; border-bottom: 1px solid #eaeaea; 
           opacity: 0; transition: opacity 1s ease 0.5s;
       }
-      h1 { font-family: 'Playfair Display', serif; font-size: 3em; margin: 0; letter-spacing: -1px; color: var(--text-main); line-height: 1.1; }
-      .subtitle { margin-top: 15px; font-size: 0.85em; color: var(--text-muted); font-weight: 400; text-transform: uppercase; letter-spacing: 3px; }
+      h1 { font-family: 'Playfair Display', serif; font-size: 2.5em; margin: 0; letter-spacing: -1px; color: #1a1a1a; line-height: 1.2; }
+      .subtitle { margin-top: 10px; font-size: 0.95em; color: #666; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
       .mobile-break { display: none; }
 
-      /* --- SEARCH BAR --- */
+      /* --- PRO SEARCH BAR --- */
       .search-container {
-          max-width: 500px; margin: 0 auto 50px; padding: 0 20px;
+          max-width: 600px; margin: -25px auto 30px; padding: 0 20px;
           position: relative; z-index: 10;
           opacity: 0; transition: opacity 1s ease 0.7s, transform 1s ease 0.7s;
           transform: translateY(20px);
       }
       
-      .search-wrapper { position: relative; width: 100%; }
+      .search-wrapper { position: relative; width: 100%; transition: transform 0.2s ease; }
       .search-icon {
-          position: absolute; left: 25px; top: 50%; transform: translateY(-50%);
-          width: 16px; height: 16px; fill: #aaa; transition: fill 0.3s ease; pointer-events: none;
+          position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+          width: 18px; height: 18px; fill: #999; transition: fill 0.3s ease; pointer-events: none;
       }
 
       #search-input {
-          width: 100%; height: 55px; padding: 0 25px 0 55px;
-          font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 400; color: var(--text-main);
-          background-color: #ffffff; border: 1px solid transparent; border-radius: 30px;
-          box-shadow: 0 5px 20px rgba(0,0,0,0.06); outline: none; box-sizing: border-box;
-          transition: all 0.3s ease; appearance: none; -webkit-appearance: none;
+          width: 100%; height: 50px; padding: 0 20px 0 50px;
+          font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 400; color: #1a1a1a;
+          background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 50px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05); outline: none; box-sizing: border-box;
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+          appearance: none; -webkit-appearance: none;
       }
-      #search-input:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-      #search-input:focus { border-color: #eee; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-      #search-input:focus + .search-icon { fill: var(--text-main); }
+      #search-input:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-color: #ccc; }
+      #search-input:focus { border-color: #1a1a1a; box-shadow: 0 8px 25px rgba(0,0,0,0.12); transform: scale(1.01); }
+      #search-input:focus + .search-icon { fill: #1a1a1a; }
       ::placeholder { color: #bbb; font-weight: 300; }
 
       /* --- GALLERY --- */
-      .gallery-container { 
-          max-width: 1100px; margin: 0 auto 80px; padding: 0 25px; 
-          display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; 
-      }
+      .gallery-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
 
-      /* --- CARDS (Refined) --- */
+      /* --- CARDS --- */
       .card { 
-          position: relative; background: white; border-radius: 0; /* Sharper, more architectural */
-          overflow: hidden; 
-          box-shadow: var(--card-shadow); 
-          transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease; 
-          text-decoration: none; color: inherit; display: block;
+          position: relative; background: white; border-radius: 4px; overflow: hidden; 
+          box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
+          transition: transform 0.3s ease, box-shadow 0.3s ease; 
+          text-decoration: none; color: inherit; display: block; border: 1px solid #eee;
           
           /* Animation Setup */
-          opacity: 0; transform: translateY(40px);
+          opacity: 0; transform: translateY(30px);
           animation-fill-mode: forwards; 
       }
       
       @keyframes cardSlideUp { to { opacity: 1; transform: translateY(0); } }
 
-      .card:hover { transform: translateY(-8px) !important; box-shadow: var(--card-hover-shadow); }
+      .card:hover { transform: translateY(-5px) !important; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-color: transparent; }
 
-      .card-image-container { position: relative; width: 100%; height: 300px; background-color: #f0f0f0; overflow: hidden; }
-      .card-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-      .card:hover .card-image { transform: scale(1.05); } /* Subtle zoom on hover */
+      .card-image-container { position: relative; width: 100%; height: 260px; background-color: #f4f4f4; }
+      .card-image { width: 100%; height: 100%; object-fit: cover; }
 
       .staff-lock {
-          position: absolute; top: 15px; right: 15px; z-index: 10;
-          width: 36px; height: 36px;
-          background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center;
-          opacity: 0; transition: all 0.3s; cursor: pointer; backdrop-filter: blur(4px);
-          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          position: absolute; top: 10px; right: 10px; z-index: 10;
+          width: 32px; height: 32px;
+          background: rgba(255,255,255,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+          opacity: 0; transition: all 0.2s; cursor: pointer; backdrop-filter: blur(4px);
       }
-      .staff-lock svg { width: 16px; height: 16px; fill: #333; transition: fill 0.2s; }
+      .staff-lock svg { width: 16px; height: 16px; fill: #1a1a1a; }
       .card:hover .staff-lock { opacity: 1; }
-      .staff-lock:hover { transform: scale(1.1); background: #333; }
-      .staff-lock:hover svg { fill: white; }
+      .staff-lock:hover { transform: scale(1.1); background: white; }
 
-      .card-info { padding: 35px 30px; }
-      .card-title { font-family: 'Playfair Display', serif; font-size: 1.6em; margin: 0 0 10px 0; color: var(--text-main); line-height: 1.2; }
-      .card-desc { font-size: 0.9em; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; font-weight: 300; }
-      
-      /* New Link Style */
-      .view-btn { 
-          font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; 
-          color: var(--text-main); display: inline-flex; align-items: center; gap: 8px;
-          transition: color 0.3s ease;
-      }
-      .arrow { transition: transform 0.3s ease; }
-      
-      .card:hover .view-btn { color: var(--accent-red); }
-      .card:hover .arrow { transform: translateX(5px); } /* Arrow slides right */
+      .card-info { padding: 25px; }
+      .card-title { font-family: 'Playfair Display', serif; font-size: 1.4em; margin: 0 0 8px 0; color: #1a1a1a; line-height: 1.2; }
+      .card-desc { font-size: 0.9em; color: #666; line-height: 1.6; margin-bottom: 20px; font-weight: 300; }
+      .view-btn { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #1a1a1a; border-bottom: 1px solid #1a1a1a; padding-bottom: 4px; transition: opacity 0.2s; }
+      .view-btn:hover { opacity: 0.7; }
 
       /* Animation Trigger Class */
       body.loaded header { opacity: 1; }
@@ -153,25 +133,22 @@
       /* --- MOBILE OPTIMIZATIONS --- */
       @media (max-width: 600px) {
         .intro-title { font-size: 1.8em; } 
-        h1 { font-size: 2.2em; }
-        header { padding: 40px 20px 30px 20px; }
+        h1 { font-size: 2em; }
+        header { padding: 40px 20px 50px 20px; }
         .mobile-break { display: block; }
-        .staff-lock { opacity: 1; }
-        .gallery-container { gap: 30px; padding: 0 20px; }
-        .card-image-container { height: 240px; }
+        .search-container { margin-top: -25px; }
+        .staff-lock { opacity: 1; background: rgba(255,255,255,0.9); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
       }
     </style>
 </head>
-<body class="no-scroll">
-
-    <div id="intro-shutter">
+<body class="no-scroll"> <div id="intro-shutter">
         <h1 class="intro-title">THE WOLFSONIAN</h1>
         <div class="intro-line"></div>
     </div>
 
     <header>
         <h1>The Wolfsonian<br class="mobile-break"> 3D Model Gallery</h1>
-        <div class="subtitle">Collection of Digitized Artifacts</div>
+        <div class="subtitle">Explore our collection of digitized artifacts</div>
     </header>
 
     <div class="search-container">
@@ -190,15 +167,15 @@
                 <a href="Haile/index.html">
                     <img src="Haile/Haile_preview.jpg" class="card-image" alt="Haile Selassie">
                 </a>
-                <a href="Haile/staff.html" class="staff-lock" title="Staff Access">
-                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3 3.1-3s3.1 1.29 3.1 3v2z"/></svg>
+                <a href="Haile/staff.html" class="staff-lock" title="Staff View">
+                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 16H5V5h14v14zm-7-2c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/></svg>
                 </a>
             </div>
             <a href="Haile/index.html" style="text-decoration:none; color:inherit;">
                 <div class="card-info">
                     <h2 class="card-title">H. M. Haile Selassie, 1937</h2>
                     <p class="card-desc">Sava Botzaris<br>Bronze</p>
-                    <span class="view-btn">View Object <span class="arrow">&rarr;</span></span>
+                    <span class="view-btn">View Object &rarr;</span>
                 </div>
             </a>
         </div>
@@ -208,15 +185,15 @@
                 <a href="Wrestler/index.html">
                     <img src="Wrestler/Wrestler_preview.jpg" class="card-image" alt="Wrestler">
                 </a>
-                <a href="Wrestler/staff.html" class="staff-lock" title="Staff Access">
-                   <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3 3.1-3s3.1 1.29 3.1 3v2z"/></svg>
+                <a href="Wrestler/staff.html" class="staff-lock" title="Staff View">
+                   <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 16H5V5h14v14zm-7-2c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/></svg>
                 </a>
             </div>
             <a href="Wrestler/index.html" style="text-decoration:none; color:inherit;">
                 <div class="card-info">
                     <h2 class="card-title">Wrestler, 1929</h2>
                     <p class="card-desc">Dudley Vaill Talcott (American, 1899-1986)<br>Cast aluminum</p>
-                    <span class="view-btn">View Object <span class="arrow">&rarr;</span></span>
+                    <span class="view-btn">View Object &rarr;</span>
                 </div>
             </a>
         </div>
@@ -226,15 +203,15 @@
                 <a href="Building Scan/index.html">
                     <img src="Building Scan/Building_Model_preview.jpg" class="card-image" alt="Building">
                 </a>
-                <a href="Building Scan/staff.html" class="staff-lock" title="Staff Access">
-                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3 3.1-3s3.1 1.29 3.1 3v2z"/></svg>
+                <a href="Building Scan/staff.html" class="staff-lock" title="Staff View">
+                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 16H5V5h14v14zm-7-2c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/></svg>
                 </a>
             </div>
             <a href="Building Scan/index.html" style="text-decoration:none; color:inherit;">
                 <div class="card-info">
                     <h2 class="card-title">The Wolfsonian Building</h2>
                     <p class="card-desc">1001 Washington Avenue<br>Miami Beach, FL</p>
-                    <span class="view-btn">View Architecture <span class="arrow">&rarr;</span></span>
+                    <span class="view-btn">View Architecture &rarr;</span>
                 </div>
             </a>
         </div>
@@ -243,22 +220,33 @@
 
     <script>
         // --- 1. FORCE SCROLL RESET ON LOAD ---
-        if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+        // Prevents browser from remembering old scroll position
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
         window.scrollTo(0,0);
 
         // --- ANIMATION CONTROLLER ---
         window.addEventListener('load', () => {
+            // Double check scroll reset when fully loaded
             window.scrollTo(0,0);
+            
             const shutter = document.getElementById('intro-shutter');
             const body = document.body;
             
             setTimeout(() => {
                 shutter.classList.add('fade-content');
+                
                 setTimeout(() => {
                     shutter.classList.add('shutter-open');
+                    
+                    // Allow scrolling again
                     body.classList.remove('no-scroll');
+                    
+                    // Trigger gallery animations
                     body.classList.add('loaded');
                 }, 600);
+                
             }, 1800);
         });
 
@@ -271,7 +259,9 @@
             for (let i = 0; i < cards.length; i++) {
                 const title = cards[i].querySelector('.card-title');
                 const desc = cards[i].querySelector('.card-desc');
+                
                 const txtValue = (title.textContent || title.innerText) + " " + (desc.textContent || desc.innerText);
+                
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     cards[i].style.display = "";
                 } else {
