@@ -6,7 +6,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Lateef&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
     <style>
       body { margin: 0; padding: 0; background-color: #f9f9f9; font-family: 'Lato', sans-serif; color: #1a1a1a; }
@@ -17,16 +17,17 @@
       /* --- INTRO LOADER --- */
       #intro-shutter {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-          background-color: #1a1a1a; /* Dark Wolfsonian Grey */
+          background-color: #1a1a1a; 
           z-index: 99999;
           display: flex; flex-direction: column; justify-content: center; align-items: center;
           transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
       }
       
       .intro-title {
-          font-family: 'Playfair Display', serif;
+          font-family: 'Jacques Francois', serif; /* Matching the new title font */
           font-size: 3em; color: white; margin: 0;
           opacity: 0; text-align: center; padding: 0 20px; 
+          text-transform: uppercase;
           transform: translateY(20px);
           animation: textReveal 1s ease-out forwards 0.2s;
       }
@@ -42,15 +43,33 @@
       .shutter-open { transform: translateY(-100%); }
       .fade-content .intro-title, .fade-content .intro-line { opacity: 0; transition: opacity 0.5s ease; }
 
-      /* --- HEADER --- */
+      /* --- HEADER (Updated Typography) --- */
       header { 
-          text-align: center; padding: 50px 20px 40px 20px; 
+          text-align: center; padding: 60px 20px 40px 20px; 
           background-color: #ffffff; 
           border-bottom: 1px solid #eaeaea; 
           opacity: 0; transition: opacity 1s ease 0.5s;
       }
-      h1 { font-family: 'Playfair Display', serif; font-size: 2.5em; margin: 0; letter-spacing: -1px; color: #1a1a1a; line-height: 1.2; }
-      .subtitle { margin-top: 10px; font-size: 0.95em; color: #666; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
+      
+      h1 { 
+          font-family: 'Jacques Francois', serif; /* New Title Font */
+          font-size: 3.5rem; 
+          margin: 0; 
+          color: #1a1a1a; 
+          line-height: 1;
+          text-transform: uppercase;
+          font-weight: 400; 
+      }
+      
+      .subtitle { 
+          font-family: 'Lateef', serif; /* New Subtitle Font */
+          margin-top: 5px; /* Tighter spacing */
+          font-size: 2.5rem; /* Proportional size */
+          color: #1a1a1a; /* Darker black as per reference */
+          font-weight: 400; 
+          line-height: 1;
+      }
+      
       .mobile-break { display: none; }
 
       /* --- SEARCH BAR --- */
@@ -115,9 +134,9 @@
       .staff-lock:hover { opacity: 1; transform: scale(1.1); }
 
       .card-info { padding: 25px; }
-      .card-title { font-family: 'Playfair Display', serif; font-size: 1.4em; margin: 0 0 8px 0; color: #1a1a1a; line-height: 1.2; }
-      .card-desc { font-size: 0.9em; color: #666; line-height: 1.6; margin-bottom: 20px; font-weight: 300; }
-      .view-btn { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #1a1a1a; border-bottom: 1px solid #1a1a1a; padding-bottom: 4px; transition: opacity 0.2s; }
+      .card-title { font-family: 'Jacques Francois', serif; font-size: 1.4em; margin: 0 0 8px 0; color: #1a1a1a; line-height: 1.2; text-transform: uppercase; }
+      .card-desc { font-family: 'Lateef', serif; font-size: 1.3em; color: #666; line-height: 1.2; margin-bottom: 20px; font-weight: 300; }
+      .view-btn { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #1a1a1a; border-bottom: 1px solid #1a1a1a; padding-bottom: 4px; transition: opacity 0.2s; font-family: 'Lato', sans-serif; }
       .view-btn:hover { opacity: 0.7; }
 
       /* Animation Trigger Class */
@@ -129,8 +148,11 @@
       body.loaded .card:nth-child(3) { animation-delay: 0.8s; }
 
       @media (max-width: 600px) {
+        /* Mobile Sizes */
+        h1 { font-size: 2.2rem; }
+        .subtitle { font-size: 1.8rem; }
+        
         .intro-title { font-size: 1.8em; } 
-        h1 { font-size: 2em; }
         header { padding: 40px 20px 50px 20px; }
         .mobile-break { display: block; }
         .search-container { margin-top: -25px; }
@@ -146,8 +168,8 @@
     </div>
 
     <header>
-        <h1>The Wolfsonian<br class="mobile-break"> 3D Model Gallery</h1>
-        <div class="subtitle">Explore our collection of digitized artifacts</div>
+        <h1>The Wolfsonian</h1>
+        <div class="subtitle">3d model gallery</div>
     </header>
 
     <div class="search-container">
