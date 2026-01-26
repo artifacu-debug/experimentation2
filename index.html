@@ -6,7 +6,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Lateef&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Lateef&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
       body { margin: 0; padding: 0; background-color: #f9f9f9; font-family: 'Lato', sans-serif; color: #1a1a1a; }
@@ -24,7 +24,7 @@
       }
       
       .intro-title {
-          font-family: 'Jacques Francois', serif; /* Matching the new title font */
+          font-family: 'Jacques Francois', serif; /* Matching Header */
           font-size: 3em; color: white; margin: 0;
           opacity: 0; text-align: center; padding: 0 20px; 
           text-transform: uppercase;
@@ -43,7 +43,7 @@
       .shutter-open { transform: translateY(-100%); }
       .fade-content .intro-title, .fade-content .intro-line { opacity: 0; transition: opacity 0.5s ease; }
 
-      /* --- HEADER (Updated Typography) --- */
+      /* --- HEADER (New Jacques Francois Style) --- */
       header { 
           text-align: center; padding: 60px 20px 40px 20px; 
           background-color: #ffffff; 
@@ -52,22 +52,15 @@
       }
       
       h1 { 
-          font-family: 'Jacques Francois', serif; /* New Title Font */
-          font-size: 3.5rem; 
-          margin: 0; 
-          color: #1a1a1a; 
-          line-height: 1;
-          text-transform: uppercase;
-          font-weight: 400; 
+          font-family: 'Jacques Francois', serif; 
+          font-size: 3.5rem; margin: 0; color: #1a1a1a; 
+          line-height: 1; text-transform: uppercase; font-weight: 400; 
       }
       
       .subtitle { 
-          font-family: 'Lateef', serif; /* New Subtitle Font */
-          margin-top: 5px; /* Tighter spacing */
-          font-size: 2.5rem; /* Proportional size */
-          color: #1a1a1a; /* Darker black as per reference */
-          font-weight: 400; 
-          line-height: 1;
+          font-family: 'Lateef', serif; 
+          margin-top: 5px; font-size: 2.5rem; color: #1a1a1a; 
+          font-weight: 400; line-height: 1;
       }
       
       .mobile-break { display: none; }
@@ -104,10 +97,10 @@
 
       /* --- CARDS --- */
       .card { 
-          position: relative; background: white; border-radius: 4px; overflow: hidden; 
-          box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
-          transition: transform 0.3s ease, box-shadow 0.3s ease; 
-          text-decoration: none; color: inherit; display: block; border: 1px solid #eee;
+          position: relative; background: white; border-radius: 8px; overflow: hidden; 
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+          transition: transform 0.2s, box-shadow 0.2s; 
+          text-decoration: none; color: inherit; display: block;
           
           /* Animation Setup */
           opacity: 0; transform: translateY(30px);
@@ -116,12 +109,12 @@
       
       @keyframes cardSlideUp { to { opacity: 1; transform: translateY(0); } }
 
-      .card:hover { transform: translateY(-5px) !important; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-color: transparent; }
+      .card:hover { transform: translateY(-5px) !important; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
 
       .card-image-container { position: relative; width: 100%; height: 260px; background-color: #f4f4f4; }
       .card-image { width: 100%; height: 100%; object-fit: cover; }
 
-      /* --- STAFF BUTTON (Subtle Version) --- */
+      /* --- STAFF BUTTON (Subtle) --- */
       .staff-lock {
           position: absolute; top: 15px; right: 15px; z-index: 10;
           width: 30px; height: 30px;
@@ -133,11 +126,34 @@
       .staff-lock svg { width: 22px; height: 22px; fill: #1a1a1a; filter: drop-shadow(0 1px 2px rgba(255,255,255,0.8)); }
       .staff-lock:hover { opacity: 1; transform: scale(1.1); }
 
+      /* --- CARD INFO (RESTORED TO ORIGINAL) --- */
       .card-info { padding: 25px; }
-      .card-title { font-family: 'Jacques Francois', serif; font-size: 1.4em; margin: 0 0 8px 0; color: #1a1a1a; line-height: 1.2; text-transform: uppercase; }
-      .card-desc { font-family: 'Lateef', serif; font-size: 1.3em; color: #666; line-height: 1.2; margin-bottom: 20px; font-weight: 300; }
-      .view-btn { font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #1a1a1a; border-bottom: 1px solid #1a1a1a; padding-bottom: 4px; transition: opacity 0.2s; font-family: 'Lato', sans-serif; }
-      .view-btn:hover { opacity: 0.7; }
+      
+      .card-title { 
+          font-family: 'Playfair Display', serif; /* Restored Font */
+          font-size: 1.5em; /* Restored Size */
+          margin: 0 0 8px 0; 
+          color: #1a1a1a; 
+      }
+      
+      .card-desc { 
+          font-family: 'Lato', sans-serif; /* Restored Font */
+          font-size: 0.9em; 
+          color: #666; 
+          line-height: 1.5; /* Restored Line Height */
+          margin-bottom: 20px; 
+      }
+      
+      .view-btn { 
+          font-family: 'Lato', sans-serif; /* Restored Font */
+          font-size: 0.75em; 
+          font-weight: 700; 
+          text-transform: uppercase; 
+          letter-spacing: 1.5px; 
+          color: #1a1a1a; 
+          border-bottom: 2px solid #1a1a1a; /* Restored Thicker Line */
+          padding-bottom: 2px; 
+      }
 
       /* Animation Trigger Class */
       body.loaded header { opacity: 1; }
@@ -148,7 +164,6 @@
       body.loaded .card:nth-child(3) { animation-delay: 0.8s; }
 
       @media (max-width: 600px) {
-        /* Mobile Sizes */
         h1 { font-size: 2.2rem; }
         .subtitle { font-size: 1.8rem; }
         
@@ -169,7 +184,7 @@
 
     <header>
         <h1>The Wolfsonian</h1>
-        <div class="subtitle">3D model gallery</div>
+        <div class="subtitle">3d model gallery</div>
     </header>
 
     <div class="search-container">
@@ -251,7 +266,7 @@
             const body = document.body;
             
             // Check Local Storage for today's date
-            const today = new Date().toDateString(); // e.g. "Mon Jan 01 2024"
+            const today = new Date().toDateString(); 
             const lastShown = localStorage.getItem('wolfsonian_intro_shown');
 
             if (lastShown !== today) {
@@ -294,4 +309,3 @@
     </script>
 </body>
 </html>
-
