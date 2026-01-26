@@ -231,9 +231,9 @@
         function toggleLighting() {
             const viewer = document.querySelector('model-viewer');
             lightStep = (lightStep + 1) % 3;
-            if (lightStep === 0) { viewer.exposure = 0.7; viewer.shadowIntensity = 2; }
-            else if (lightStep === 1) { viewer.exposure = 1.2; viewer.shadowIntensity = 0.5; }
-            else { viewer.exposure = 0.5; viewer.shadowIntensity = 4; }
+            if (lightStep === 0) { viewer.exposure = 1.7; viewer.shadowIntensity = 2; }
+            else if (lightStep === 1) { viewer.exposure = 2.2; viewer.shadowIntensity = 0.5; }
+            else { viewer.exposure = 1.5; viewer.shadowIntensity = 4; }
         }
 
         async function capturePostcard() {
@@ -285,6 +285,7 @@
 </body>
 
 </html>
+
 
 
 
