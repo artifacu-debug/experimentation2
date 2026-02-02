@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>The Wolfsonian Building</title>
+    <title>Museum Collection Viewer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
@@ -46,9 +46,11 @@
       .circle-btn:active { transform: scale(0.95); }
       .circle-btn svg { width: 22px; height: 22px; fill: #1a1a1a; }
 
-      /* --- NAVIGATION (BACK BUTTON) --- */
+      /* --- NAVIGATION (BACK BUTTON - Bottom Right) --- */
       .back-btn {
-        position: absolute; bottom: 30px; right: 30px; z-index: 100;
+        position: absolute; 
+        bottom: 30px; right: 30px; /* Aligned to Bottom Right */
+        z-index: 100;
         animation: fadeInDown 0.8s ease-out 0.4s forwards;
         opacity: 0;
       }
@@ -76,7 +78,7 @@
       h1 { margin: 0 0 8px 0; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.6em; color: #1a1a1a; line-height: 1.1; }
       p { margin: 0 0 15px 0; font-size: 0.9em; line-height: 1.5; color: #555; font-weight: 300; }
 
-      /* --- ICON ACTION BUTTONS --- */
+      /* --- NEW ICON ACTION BUTTONS --- */
       .btn-container { display: flex; gap: 10px; margin-top: 5px; }
       
       .icon-btn {
@@ -86,14 +88,16 @@
           cursor: pointer; transition: all 0.2s ease;
       }
       .icon-btn svg { height: 20px; width: 20px; }
+      
       .btn-learn { background: transparent; fill: #1a1a1a; }
       .btn-learn:hover { background: rgba(0,0,0,0.05); }
+      
       .btn-ar { background: #1a1a1a; fill: white; }
       .btn-ar:hover { background: #333; border-color: #333; }
       .btn-ar:active { transform: scale(0.98); }
 
-      /* --- IMMERSIVE FULLSCREEN LOGIC (NEW) --- */
-      /* When fullscreen is active, hide everything... */
+      /* --- IMMERSIVE FULLSCREEN LOGIC --- */
+      /* Hides everything except the fullscreen button */
       body.fullscreen-active .back-btn,
       body.fullscreen-active #info-card,
       body.fullscreen-active .controls-container .circle-btn:not(#fullscreen-btn) {
@@ -101,7 +105,7 @@
           opacity: 0;
           pointer-events: none;
       }
-      /* ...except the model viewer (remove padding so it fills screen) */
+      /* Remove padding so model fills specific screen area */
       body.fullscreen-active model-viewer { padding-bottom: 0 !important; }
 
 
@@ -169,11 +173,12 @@
     </a>
 
     <div id="info-card">
-        <h1>The Wolfsonian Building</h1>
+        <h1>Wrestler, 1929</h1>
         <p>
-            1001 Washington Avenue<br>
-            Miami Beach, FL<br>
-            Built 1927, Renovated 1992
+            Dudley Vaill Talcott (American, 1899-1986)<br>
+            Cast aluminum, 80 x 47 ½ x 30-3/4"<br>
+            The Wolfsonian–FIU<br>
+            Purchased in 1991
         </p>
 
         <div class="btn-container">
@@ -210,14 +215,15 @@
 
     <model-viewer 
       id="viewer"
-      src="Building_Model.glb"
-      alt="A 3D scan of The Wolfsonian Building" 
-      orientation="0deg 0deg 320deg"
+      src="Wolfsonian_wrestler_model.glb"
+      alt="A 3D scan of Wrestler sculpture" 
+      orientation="0deg 0deg 45deg"
       auto-rotate camera-controls 
       shadow-intensity="2" 
-      environment-image="legacy" 
+      shadow-softness="0"
       exposure="0.7" 
       tone-mapping="aces"
+      environment-image="legacy"
       ar ar-modes="webxr scene-viewer quick-look"
       ar-scale="fixed">
       <button slot="ar-button" style="display: none;"></button>
@@ -226,22 +232,24 @@
     <div id="info-modal" class="modal-overlay" onclick="closeModal('info-modal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
-                <h2 class="modal-title">About the Architecture</h2>
+                <h2 class="modal-title">About the Object</h2>
                 <span class="close-btn" onclick="closeModal('info-modal')">&times;</span>
             </div>
             
-            <div class="section-title">Storehouse to Symbol</div>
+            <div class="section-title">Artistic Style</div>
             <p class="modal-text">
-                Originally built in 1927 by Robertson & Patterson to house the Washington Storage Company, our Mediterranean Revival building on the corner of 10th Street and Washington Avenue has been a beacon of culture in Miami Beach for generations. 
+                The artist Dudley Talcott appropriated a recognizable semi-classical form and superimposed a machine-like veneer, with hands resembling tools, exaggerated and stylized musculature, and a featureless visage.
                 <br><br>
-                The structure was enlarged and transformed in 1992 by architect Mark Hampton into the state-of-the-art museum it is today.
+                Fabricating the massive form in cast aluminum, a newly accessible and favored Art Deco building material at the time, he further associated the Wrestler with a new modern aspect.
             </p>
             
-            <div class="section-title">Mundane to Monumental</div>
+            <div class="section-title">Exhibition History</div>
             <p class="modal-text">
-                With more than 200,000 objects, our collection contains a vast universe of ideas: household appliances that sped the pace of work; designs that bridged cultures; architectural plans fueled by ambition; and propaganda that helped turn the tides of war. 
+                The Wrestler was exhibited in 1930 at The Museum of Modern Art and then at the 10th Olympic Games in Los Angeles in 1932. 
                 <br><br>
-                Our core focus is material from Europe and the United States, extending to regions of Latin America, Asia, and Africa.
+                Until 1948, art competitions were a part of the modern Olympic Games, wherein medals were awarded for works inspired by sport. Thirty-one nations participated in the 1932 Olympic art exhibition held at the Los Angeles Art Museum. 
+                <br><br>
+                Talcott received an Honorable Mention. The gold medal went to Mahonri Young, an important New York social realist sculptor (and grandson of Brigham Young).
             </p>
         </div>
     </div>
@@ -252,7 +260,7 @@
                  <span class="close-btn" onclick="closeModal('qr-modal-overlay')">&times;</span>
             </div>
             <h2 style="margin-top:0;">View in your space</h2>
-            <p class="qr-text">Scan this code with your phone camera to view the Building in AR.</p>
+            <p class="qr-text">Scan this code with your phone camera to view the Wrestler in AR.</p>
             <img id="qr-image" class="qr-image" src="" alt="QR Code" />
         </div>
     </div>
@@ -276,14 +284,14 @@
             }
         }
 
-        // FULL SCREEN (IMMERSIVE LOGIC)
+        // FULL SCREEN
         const iconExpand = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
         const iconCompress = `<svg viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>`;
 
         function toggleFullScreen() {
             const btn = document.getElementById("fullscreen-btn");
             
-            // Toggle the class on the body (CSS handles hiding elements)
+            // Check if class exists
             if (!document.body.classList.contains("fullscreen-active")) {
                 document.body.classList.add("fullscreen-active");
                 btn.innerHTML = iconCompress;
@@ -359,10 +367,10 @@
                 // Left
                 ctx.font = `bold ${fontSize}px serif`;
                 ctx.textAlign = "left";
-                ctx.fillText("The Wolfsonian Building", padding, textY);
+                ctx.fillText("Wrestler", padding, textY);
                 ctx.font = `normal ${fontSize * 0.6}px sans-serif`;
                 ctx.fillStyle = "#555";
-                ctx.fillText("Miami Beach, FL (1927 / 1992)", padding, textY + (fontSize * 1.2));
+                ctx.fillText("Dudley Vaill Talcott, 1929", padding, textY + (fontSize * 1.2));
                 
                 // Right
                 ctx.font = `bold ${fontSize * 0.7}px serif`;
@@ -371,7 +379,7 @@
                 ctx.fillText("The Wolfsonian–FIU", canvas.width - padding, barY + (barHeight/2) + (fontSize * 0.2));
 
                 const link = document.createElement('a');
-                link.download = 'Wolfsonian_Building_Postcard.jpg';
+                link.download = 'Wolfsonian_Wrestler_Postcard.jpg';
                 link.href = canvas.toDataURL('image/jpeg', 0.9);
                 link.click();
             };
@@ -381,7 +389,6 @@
 
 </body>
 </html>
-
 
 
 
