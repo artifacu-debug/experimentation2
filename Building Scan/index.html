@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>The Wolfsonian Building</title>
+    <title>H. M. Haile Selassie</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
@@ -47,9 +47,12 @@
       .circle-btn:active { transform: scale(0.95); }
       .circle-btn svg { width: 22px; height: 22px; fill: #1a1a1a; }
 
-      /* --- NAVIGATION (BACK BUTTON) --- */
+      /* --- NAVIGATION (BACK BUTTON - BOTTOM LEFT) --- */
       .back-btn {
-        position: absolute; top: 30px; left: 30px; z-index: 100;
+        position: absolute; 
+        bottom: 30px; /* Moved to bottom as requested */
+        left: 30px; 
+        z-index: 100;
         animation: fadeInDown 0.8s ease-out 0.4s forwards;
         opacity: 0;
       }
@@ -64,32 +67,39 @@
       /* --- INFO CARD --- */
       #info-card {
         position: absolute; 
-        top: 100px; /* Moved down to make room for Back Button */
+        top: 30px; /* Back at top since back button is at bottom */
         left: 30px; z-index: 10;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        padding: 30px; border-radius: 4px; 
+        padding: 25px; border-radius: 4px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         border-left: 5px solid #1a1a1a; 
-        max-width: 320px;
+        max-width: 280px;
         animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       }
 
-      h1 { margin: 0 0 10px 0; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.8em; color: #1a1a1a; line-height: 1.1; }
-      p { margin: 0 0 20px 0; font-size: 0.95em; line-height: 1.6; color: #555; font-weight: 300; }
+      h1 { margin: 0 0 8px 0; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.6em; color: #1a1a1a; line-height: 1.1; }
+      p { margin: 0 0 15px 0; font-size: 0.9em; line-height: 1.5; color: #555; font-weight: 300; }
 
-      .btn-container { display: block; }
-      .btn {
-        display: block; width: 100%; padding: 14px 0; 
-        font-family: 'Lato', sans-serif; font-size: 0.9em; font-weight: 700;
-        letter-spacing: 1px; text-transform: uppercase; 
-        border: none; cursor: pointer; transition: all 0.2s;
-        margin-bottom: 12px; text-align: center;
+      /* --- COMPACT ACTION BUTTONS --- */
+      .btn-container { display: flex; gap: 10px; margin-top: 5px; }
+      
+      .icon-btn {
+          flex: 1; height: 45px;
+          display: flex; align-items: center; justify-content: center;
+          border-radius: 4px; border: 1px solid #1a1a1a;
+          cursor: pointer; transition: all 0.2s ease;
       }
-      .btn-primary { background-color: #1a1a1a; color: white; }
-      .btn-primary:active { background-color: #444; transform: scale(0.98); } 
-      .btn-secondary { background-color: transparent; color: #1a1a1a; border: 2px solid #1a1a1a; }
-      .btn-secondary:active { background-color: #eee; transform: scale(0.98); }
+      .icon-btn svg { height: 20px; width: 20px; }
+      
+      /* Learn Button (Outline) */
+      .btn-learn { background: transparent; fill: #1a1a1a; }
+      .btn-learn:hover { background: rgba(0,0,0,0.05); }
+      
+      /* AR Button (Solid) */
+      .btn-ar { background: #1a1a1a; fill: white; }
+      .btn-ar:hover { background: #333; border-color: #333; }
+      .btn-ar:active { transform: scale(0.98); }
 
       /* --- MODAL --- */
       .modal-overlay {
@@ -120,7 +130,9 @@
       @media (max-width: 600px) {
         body { background-color: white; }
         .controls-container { top: 20px; right: 20px; flex-direction: row-reverse; gap: 12px; }
-        .back-btn { top: 20px; left: 20px; width: 45px; height: 45px; } 
+        
+        /* Mobile: Back button moves to top left */
+        .back-btn { top: 20px; left: 20px; bottom: auto; width: 45px; height: 45px; } 
         .circle-btn { width: 45px; height: 45px; }
 
         model-viewer { padding-bottom: 35vh; }
@@ -132,8 +144,6 @@
           padding: 25px 25px calc(30px + env(safe-area-inset-bottom)) 25px; 
           box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
         }
-        .btn-container { display: flex; gap: 10px; }
-        .btn { width: 50%; margin-bottom: 0; font-size: 0.8em; padding: 12px 0; }
         
         .modal-content {
           width: 100%; height: 100%; max-width: none; max-height: none;
@@ -157,59 +167,54 @@
     </a>
 
     <div id="info-card">
-        <h1>The Wolfsonian Building</h1>
+        <h1>H. M. Haile Selassie, 1937</h1>
         <p>
-            1001 Washington Avenue<br>
-            Miami Beach, FL<br>
-            Built 1927, Renovated 1992
+            Sava Botzaris<br>
+            Bronze<br>
+            26-1/2 x 12 x 16 in (67.3 x 30.5 x 40.6 cm)
         </p>
 
         <div class="btn-container">
-            <button class="btn btn-secondary" onclick="openModal('info-modal')">
-                Learn More
+            <button class="icon-btn btn-learn" onclick="openModal('info-modal')" title="Learn More">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                </svg>
             </button>
-            <button class="btn btn-primary" onclick="handleAR()">
-                View in AR
+            
+            <button class="icon-btn btn-ar" onclick="handleAR()" title="View in AR">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18-.21 0-.41-.06-.57-.18l-7.9-4.44A.991.991 0 0 1 3 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15L6.04 7.5 12 10.85l5.96-3.35L12 4.15zM5 15.91l6 3.38v-6.71L5 9.21v6.7zm14 0v-6.7l-6 3.37v6.71l6-3.38z"/>
+                </svg>
             </button>
         </div>
     </div>
 
     <div class="controls-container">
-           <button class="circle-btn" id="fullscreen-btn" onclick="toggleFullScreen()" title="Toggle Full Screen">
-            <svg viewBox="0 0 24 24">
-                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-            </svg>
+        <button class="circle-btn" id="fullscreen-btn" onclick="toggleFullScreen()" title="Toggle Full Screen">
+            <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
         </button>
-        
         <button class="circle-btn" id="rotate-btn" onclick="toggleRotation()" title="Toggle Rotation">
-            <svg id="rotate-icon" viewBox="0 0 24 24">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-            </svg>
+            <svg id="rotate-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
         </button>
-
         <button class="circle-btn" onclick="toggleLighting()" title="Change Lighting">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 9c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 9c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
         </button>
-
         <button class="circle-btn" onclick="capturePostcard()" title="Save Postcard">
-            <svg viewBox="0 0 24 24">
-                <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
         </button>
     </div>
 
     <model-viewer 
       id="viewer"
-      src="Building_Model.glb"
-      alt="A 3D scan of The Wolfsonian Building" 
-      auto-rotate camera-controls
-        orientation="0deg 0deg 320deg"
+      src="Haile.glb"
+      alt="H. M. Haile Selassie Bust" 
+      orientation="0deg 0deg 270deg"
+      auto-rotate camera-controls 
       shadow-intensity="2" 
-      environment-image="legacy" 
-      exposure="0.7" 
+      shadow-softness="0"
+      exposure="2.7" 
       tone-mapping="aces"
+      environment-image="legacy"
       ar ar-modes="webxr scene-viewer quick-look"
       ar-scale="fixed">
       <button slot="ar-button" style="display: none;"></button>
@@ -218,22 +223,13 @@
     <div id="info-modal" class="modal-overlay" onclick="closeModal('info-modal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
-                <h2 class="modal-title">About the Architecture</h2>
+                <h2 class="modal-title">About the Object</h2>
                 <span class="close-btn" onclick="closeModal('info-modal')">&times;</span>
             </div>
             
-            <div class="section-title">Storehouse to Symbol</div>
+            <div class="section-title">About The Piece</div>
             <p class="modal-text">
-                Originally built in 1927 by Robertson & Patterson to house the Washington Storage Company, our Mediterranean Revival building on the corner of 10th Street and Washington Avenue has been a beacon of culture in Miami Beach for generations. 
-                <br><br>
-                The structure was enlarged and transformed in 1992 by architect Mark Hampton into the state-of-the-art museum it is today.
-            </p>
-            
-            <div class="section-title">Mundane to Monumental</div>
-            <p class="modal-text">
-                With more than 200,000 objects, our collection contains a vast universe of ideas: household appliances that sped the pace of work; designs that bridged cultures; architectural plans fueled by ambition; and propaganda that helped turn the tides of war. 
-                <br><br>
-                Our core focus is material from Europe and the United States, extending to regions of Latin America, Asia, and Africa.
+                Cast bronze full-head bust of Haile Selassie (Ethiopian, 1892-1975), emperor of Ethiopia, with overall green patina; mounted on iron swiveling stem and square base.
             </p>
         </div>
     </div>
@@ -244,7 +240,7 @@
                  <span class="close-btn" onclick="closeModal('qr-modal-overlay')">&times;</span>
             </div>
             <h2 style="margin-top:0;">View in your space</h2>
-            <p class="qr-text">Scan this code with your phone camera to view the Building in AR.</p>
+            <p class="qr-text">Scan this code with your phone camera to view this object in AR.</p>
             <img id="qr-image" class="qr-image" src="" alt="QR Code" />
         </div>
     </div>
@@ -318,17 +314,20 @@
             }
         }
 
-        // LIGHTING
+        // LIGHTING (Customized for Dark Bronze)
         let lightStep = 0;
         function toggleLighting() {
             const viewer = document.querySelector('model-viewer');
             lightStep = (lightStep + 1) % 3;
-            if (lightStep === 0) { viewer.exposure = 0.7; viewer.shadowIntensity = 2; }
-            else if (lightStep === 1) { viewer.exposure = 1.2; viewer.shadowIntensity = 0.5; }
-            else { viewer.exposure = 0.5; viewer.shadowIntensity = 4; }
+            // Default 0: High Exposure (2.7) for Dark Bronze
+            if (lightStep === 0) { viewer.exposure = 2.7; viewer.shadowIntensity = 2; }
+            // Step 1: Bright Studio
+            else if (lightStep === 1) { viewer.exposure = 3.5; viewer.shadowIntensity = 0.5; }
+            // Step 2: Moody/Dark
+            else { viewer.exposure = 1.0; viewer.shadowIntensity = 4; }
         }
 
-        // POSTCARD (Custom for Building)
+        // POSTCARD
         async function capturePostcard() {
             const viewer = document.querySelector('model-viewer');
             const blob = await viewer.toBlob({ mimeType: 'image/jpeg', qualityArgument: 1 });
@@ -355,10 +354,10 @@
                 // Left
                 ctx.font = `bold ${fontSize}px serif`;
                 ctx.textAlign = "left";
-                ctx.fillText("The Wolfsonian Building", padding, textY);
+                ctx.fillText("H. M. Haile Selassie", padding, textY);
                 ctx.font = `normal ${fontSize * 0.6}px sans-serif`;
                 ctx.fillStyle = "#555";
-                ctx.fillText("Miami Beach, FL (1927 / 1992)", padding, textY + (fontSize * 1.2));
+                ctx.fillText("Sava Botzaris, 1937", padding, textY + (fontSize * 1.2));
                 
                 // Right
                 ctx.font = `bold ${fontSize * 0.7}px serif`;
@@ -367,7 +366,7 @@
                 ctx.fillText("The Wolfsonian–FIU", canvas.width - padding, barY + (barHeight/2) + (fontSize * 0.2));
 
                 const link = document.createElement('a');
-                link.download = 'Wolfsonian_Building_Postcard.jpg';
+                link.download = 'Wolfsonian_Haile_Postcard.jpg';
                 link.href = canvas.toDataURL('image/jpeg', 0.9);
                 link.click();
             };
@@ -377,8 +376,3 @@
 
 </body>
 </html>
-
-
-
-
-
